@@ -4,6 +4,12 @@ body {
   background-color: #eee;
 }
 
+
+/*Header*/
+.navbar {
+    background-color: #00538E;
+}
+
 .form-signin {
   max-width: 330px;
   padding: 15px;

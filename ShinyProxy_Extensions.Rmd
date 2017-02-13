@@ -1,0 +1,71 @@
+---
+title: "Shinyproxy Extension"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+###Development Objectives
+The inital extension of the shinyproxy server will be to enable a user interface that meets the needs of Proskriptive to deliver products to our customers.  This delivery will focus on the shinyproxy server that provides authentication, and launches ShinyApps in Docker Containers.
+
+
+###ShinyProxy
+
+ShinyProxy is our method to deploy Shiny apps in Azure. It has built-in functionality for LDAP authentication and authorization, makes securing Shiny traffic (over TLS).  The solution is open source, and based on the Java Spring framework.  It launches Docker containers that host Shiny R apps, and is scalable, and supports multiple operating systems.    It has been developed by the company [Open Analytics](https://www.openanalytics.eu/).  The ShinProxy website is below.
+
+http://www.shinyproxy.io/
+
+
+###GitHub Access
+The application is open source, and the Proskriptive forked version is available at: https://github.com/Proskriptive/shinyproxy.   Please create branches for the features you're adding to the repository. Publish all revisions to the branch.
+
+###HTML Website Design
+
+There has been a design established for the website, and is accessible here.   
+https://marvelapp.com/78f71he/screen/24668242
+ 
+
+###HTML and CSS files
+
+The HTML files are available at: src/main/resources/templates/
+
+The modifications of these web pages needs to be developed in the following 
+
+* Remove the Navbar 
+* __login.html__ Modify the login.html to support the design found on the marvelapp website. [Design Page](https://marvelapp.com/78f71he/screen/24434639)
+    + The login page does not need __"Forgot your username or password?"__
+    + It also does need __"Don't have an account? Sign Up for this version.__
+    + Remove the navigation bar from the page.
+* __index.html__  Modify the index html  [Design Page](https://marvelapp.com/78f71he/screen/24668242)
+    + Remove the navigation bar from the page.
+    + Design the HTML and CSS files
+    + Utilze the image files to embed in the page. 
+    + 
+    
+* __app.html__   The application page is where the Shiny apps are launched in an iframe.  [Design Page](https://marvelapp.com/78f71he/screen/24668242)  
+    + Remove the navigation bar
+
+###CSS files
+The CSS files are found at: src/main/resources/static/css
+
+
+###Image files
+The image files that need to be imbeded in the web pages are src/main/resources/static/css
+These image files are temporary ones, will be replaced with similar names.
+
+
+###Building ShinyProxy from Java
+To test the shiny proxy server, you need Java 7+ installed on your machine.  You will also need to install Maven so that you can run the build.  The following command will do the build in the directory that the code is in.
+
+```
+mvn -U clean install
+```
+###Launch the application
+
+```
+java -jar shinyproxy-0.8.0.jar 
+```
+
+
+This initial build will provide a good user experience.  Future modifications will include areas of authentication, and better connections to the docker container based applications.
+
