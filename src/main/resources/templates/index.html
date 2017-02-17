@@ -15,20 +15,42 @@
 </head>
 <body>
 	<!-- navigation bar -->
-	<div th:replace="../fragments/navbar :: navbar"></div>
+	<!-- <div th:replace="../fragments/navbar :: navbar"></div> -->
 	
-	<!-- content -->
-	<div th:if="${!displayAppLogos}" id="applist" style="margin-top: 60px; border: 0px;">
+
+	<div class="container padding-0"> 
+	<div class="row no-margin">
+	<div class="col-md-12 topbar">
+	<!-- <div class="col-md-2 col-sm-offset-1"><img src="img/Account-logo.png" width="190" /></div> -->
+	<div class="col-md-2 col-sm-4 padding-0"><h2 class="heading">Account Intelligence</h2></div>
+	
+	<div class="col-md-7 col-sm-5 microsoft-img"><img src="img/Microsoft-logo.png" width="95" /></div>
+	<div class="col-md-3 col-sm-3 padding-0 text-right"><img src="img/proskriptive-image.jpg" width="" /></div>
+	
+	</div>
+	</div>
+	 </div>
+	 <div class="container-fluid"> </div>
+	<div class="row no-margin">
+	<!-- <div class="col-md-12 bluebackground">
+	</div> -->
+	<div class="col-md-12 bluebackground">
+	<div class="col-md-4 col-md-offset-2">
+	  	<!-- content -->
+	  	<img src="/img/surface-pro-4.png" alt="laptop" height="540px" />
+	 </div>
+	<div class="col-md-4">
+	   <div th:if="${!displayAppLogos}" id="applist" style="margin-top: 60px; border: 0px;">
 		<ul>
 			<li th:each="app: ${apps}">
-				<a th:href="@{/app/}+${app.name}" th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></a>
+				<a class= "btn btn-default btn-lg"  th:href="@{/app/}+${app.name}" th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></a>
 				<br th:if="${app.description != null}" />
-				<span th:if="${app.description != null}" th:text="${app.description}"></span>
+				<div class="app-description" th:if="${app.description != null}" th:text="${app.description}"></div>
 			</li>
 		</ul>
-	</div>
+	</div>  
     
-    <div th:if="${displayAppLogos}" class="container" id="applist" style="margin-top: 60px; border: 0px;">
+   <div th:if="${displayAppLogos}" class="container" id="applist" style="margin-top: 60px; border: 0px;">
 		<div class="row" style="margin-top:20px;" th:each="app: ${apps}">
 			<div class="col-md-6 col-md-offset-3">
 				<div class="media">
@@ -36,13 +58,110 @@
 						<img th:if="${app.logoUrl != null}" th:src="${app.logoUrl}"></img>
 					</div>
 					<div class="media-body">
-						<a th:href="@{/app/}+${app.name}" th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></a>
+						<a th:href="@{/app/}+${app.name}" 
+						th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></a>
 						<br th:if="${app.description != null}" />
 						<span th:if="${app.description != null}" th:text="${app.description}"></span>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+	  	</div>
+	</div>
+	</div>
+	
+	<div class="container margin-top-50"> 
+	<div class="row no-margin">
+	<div class="col-md-6">
+	<img src="img/barchart.jpg" class="img-responsive" />
+	</div>
+	<div class="col-md-6">
+	<p class="text-line">
+	Research shows that data science is the key to unlocking an estimated
+	</p>
+	<p class="text-line">
+	<b>$300 billion per year in savings within the healthcare industry.</b>
+	</p>
+	
+	<p class="text-line line-height-2 margin-top-30">
+	Penalties from the Centers for Medicare &amp; Medicaid Services (CMS)account for a portion of where these savings can be achieved.
+	</p>
+	
+	<p class="text-line line-height-2 margin-top-30">
+	<b>The Account Intelligence tool is designed to:</b>
+	</p>
+	
+	<p class="text-line line-height-2">
+	<ul class="padding-left-20">
+	<li class="text-line margin-bottom-15"> scrub through your list of account to surface strategic sales opportunities </li>
+	<li class="text-line margin-bottom-15"> enable you to better understand health care initiatives that drive opportunities within your account </li>
+	<li class="text-line margin-bottom-15"> and soon, provide connections to co-selling partners with Microsoft based solution that solve those challenges</li>
+	</ul>
+	</p>
+	
+	<p class="text-line line-height-2 margin-top-30">
+	<b>Access to this information will enable you enable you to target resources and sales
+	efforts toward account where you can make the greatest impact.
+	 </b>
+	</p>
+	</div>
+	</div>
+	<div class="row no-margin">
+	<div class="col-md-12 text-center">
+	<p class="different-penalities text-black font-size-26">Different type of Penalities</p>
+	</div>
+	</div>
+	<div class="row no-margin margin-bottom-25">
+	<div class="col-md-6">
+	<img src="img/readmissionimage.jpg" class="img-responsive" />
+	</div>
+	<div class="col-md-6 padding-left-65 margin-top-85">
+	<p class="different-penalities-subheading"> Readmission Penalty</p>
+	<p class="text-line line-height-2">A Readmission is defined as a <b>measure of patients who initially went into
+	the hospital for one of five conditions but returned within 30 days of discharge.</b> CMS penalizes hospitals for
+	readmissions related to heart failure, heart attack, pneumonia, chronic lung problems, such as emphysema and bronchitis,
+	and elective hip and knee replacements. 
+	</p>
+	</div>
+	</div>
+	<div class="row no-margin margin-bottom-25">
+	<div class="col-md-6 margin-top-85 padding-right-65">
+	<p class="different-penalities-subheading"> HCAHPS (Hospital Consumer Assessment of Healthcare Providers and Systems)</p>
+	<p class="text-line line-height-2">The HCAHPS survey is a standardized, publicly reported survey 
+	of patient's perspectives of hospital care. <b>Patients rate their inpatient stay in 27 categories,</b>
+	ranging from communication with doctors and nurses to pain management to facility cleanliness and quietness. Based
+	in part on these scores, hospitals can either lose or gain up to 2% of their Medicare reimbursement dollars.
+	</p>
+	</div>
+	<div class="col-md-6">
+	<img src="img/hospitalimage.jpg" class="img-responsive" />
+	</div>
+	</div>
+	<div class="row no-margin margin-bottom-120">
+	<div class="col-md-6">
+	<img src="img/hacimage.jpg" class="img-responsive" />
+	</div>
+	<div class="col-md-6 margin-top-85 padding-left-65">
+	<p class="different-penalities-subheading"> HAC (Hospital Acquired Conditions)</p>
+	<p class="text-line line-height-2">
+	HAC are defined as <b> conditions that patients acquire while receiving treatment for another conditions in an 
+	acute in an acute care health setting.</b> The HAC payment penalty is calculated as an adjustment of calculated Value 
+	Based Purchasing and Readmission Reduction programs. Payment adjustment would impact hospitals that rank among the lowest 
+	performing 25% with regard to HACs.
+	</p>
+	</div>
+	</div>
+	<div class="row no-margin">
+	<div class="col-md-6">
+	<p class="text-line">Copyright &copy; 2016. All rights reserved</p>
+	</div>
+	<div class="col-md-6">
+	<p class="powerby">
+						Powered by <img src="img/proskriptive-image.PNG" />
+					</p>
+	</div>
+	</div>
 	</div>
 </body>
 </html>

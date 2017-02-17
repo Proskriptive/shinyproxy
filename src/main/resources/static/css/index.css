@@ -1,1 +1,104 @@
 /* Index css file */
+
+.no-margin{
+	margin:0;
+}
+.topbar{
+	    background: #fff;
+	        padding-top: 10px;
+    padding-bottom: 7px;
+}
+.bluebackground {
+	background: url('../img/background-blue.jpeg') no-repeat;
+	    height: 600px;
+	       background-position: center;
+}
+.bluebackimage{
+	background: url('../img/surface-pro-4.png') no-repeat;
+	    height: 580px;
+	       background-position: center;
+}
+.bluebackground a{
+    color:  #01538F;
+    font-size: 30px;
+}
+
+.btn {
+  width: 400px;
+}
+
+.app-description{
+	color:#FFFFFF;
+	font-size: 30px;
+	margin-top:40px;
+	margin-bottom:20px;
+}
+.heading{
+	       margin-bottom: 0px;
+    color: #01538F;
+    font-size: 20px;
+    margin-top: 5px;
+    padding-right: 20px;
+    padding: 0;
+}
+.padding-left-75{
+	    padding-left: 75px;
+}
+.microsoft-img{
+    margin-top: 5px;
+        padding-left: 25px;
+}
+.padding-0{
+	padding:0;
+}
+.text-line{
+	color:#7f7f7f;
+	    
+}
+.line-height-2{
+	    line-height: 2;
+}
+.margin-top-30{
+	    margin-top: 30px;
+}
+.margin-bottom-15{
+	    margin-bottom: 15px;
+}
+
+.different-penalities{
+	color:#000;
+	font-size: 26px;
+	margin-top:100px;
+	margin-bottom:40px;
+}
+.different-penalities-subheading{
+	color:#000;
+	font-size: 20px;
+	margin-bottom:30px;
+}
+.padding-left-65{
+	    padding-left: 65px;
+}
+.padding-right-65{
+	    padding-right: 65px;
+}
+.margin-top-85{
+	margin-top:85px;
+}
+.margin-top-50{
+	margin-top:50px;
+}
+.margin-bottom-25{
+	margin-bottom:25px;
+}
+.margin-bottom-120{
+	margin-bottom:120px;
+}
+.powerby{
+	    color: #7f7f7f;
+	text-align: right;
+   
+}
+.padding-left-20{
+	padding-left: 20px;
+}
