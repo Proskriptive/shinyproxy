@@ -2,42 +2,85 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head lang="en">
-	<title th:text="${title}"></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link
-		href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-		th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
-		type="text/css" rel="stylesheet" media="screen" />
-	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
-		th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
-	<!-- Custom styles for this template -->
-	<link th:href="@{/css/signin.css}" 
-		type="text/css" rel="stylesheet" media="screen" ></link>
+<title th:text="${title}"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link
+	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
+	type="text/css" rel="stylesheet" media="screen" />
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	type="text/css" rel="stylesheet" media="screen" />
+<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
+	th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
+<!-- Custom styles for this template -->
+<link th:href="@{/css/signin.css}" type="text/css" rel="stylesheet"
+	media="screen"></link>
 </head>
 <body>
 	<!-- navigation bar -->
-	<div th:replace="../fragments/navbar :: navbar"></div>
+	<!-- <div th:replace="../fragments/navbar :: navbar"></div> -->
 
 	<!-- content -->
-	<div class="container">
+	<div class="signinbackground">
 
-		<form class="form-signin" action="login" method="POST">
-			<h2 class="form-signin-heading">Please sign in</h2>
-			<div class="alert alert-danger" th:if="${error}">
-  				<strong>Could not sign in!</strong><br/><span th:text="${error}"></span>.
+		<form class="form-signin white-background" action="login"
+			method="POST">
+			<div class="row">
+				<div class="col-md-12">
+					<h2 class="form-signin-heading">Account Intelligence</h2>
+				</div>
+				<div class="col-md-12 text-right padding-right-50">
+					<img src="img/Microsoft-logo.png" width="70" />
+				</div>
+
+				<div class="alert alert-danger" th:if="${error}">
+					<strong>Could not sign in!</strong><br />
+					<span th:text="${error}"></span>.
+				</div>
+				<div class="col-md-12">
+					<p class="welcomeback">
+						Welcome back<b>, sign in</b> to continue
+					</p>
+				</div>
+				<div class="col-md-12 email-input">
+					<div class="form-group has-feedback">
+						<label for="username" class="sr-only">Email address</label> <input
+							name="username" id="username" class="form-control"
+							placeholder="Email" required="required" autofocus="autofocus"></input>
+						<span class="fa fa-envelope form-control-feedback"></span>
+					</div>
+				</div>
+				<div class="col-md-12 pass-input">
+					<div class="form-group has-feedback">
+						<label for="password" class="sr-only">Password</label> <input
+							name="password" type="password" id="password"
+							class="form-control" placeholder="Password" required="required"></input>
+						<span class="fa fa-lock fa-lg form-control-feedback"></span>
+					</div>
+				</div>
+				<!-- not supported -->
+				<div class="col-md-8 rememberme-check">
+					<div class="checkbox checkbox-primary" style="visibility: hidden;">
+						<input id="checkbox2" type="checkbox"></input> <label
+							for="checkbox2"> Remember Me </label>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<button class="btn btn-primary btn-block text-right sign-button"
+						type="submit">Sign in</button>
+				</div>
+				<!--<div class="col-md-12" style="visibility: hidden;">
+					<p class="dont-have">
+						Don't have an account? <span class="sign-link"> Sign up</span>
+					</p>
+				</div>-->
+				<div class="col-md-12">
+					<p class="powerby">
+						Powered by <img src="img/proskriptive-image.PNG" />
+					</p>
+				</div>
 			</div>
-			<label for="username" class="sr-only">Email address</label> 
-			<input name="username" id="username" class="form-control" placeholder="User name" required="required" autofocus="autofocus"></input> 
-			<label for="password" class="sr-only">Password</label>
-			<input name="password" type="password" id="password" class="form-control" placeholder="Password" required="required"></input>
-			<!-- not supported 
-	        <div class="checkbox">
-	          <label>
-	            <input type="checkbox" value="remember-me"></input> Remember me
-	          </label>
-	        </div>
-	        -->
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 		</form>
 
 	</div>
