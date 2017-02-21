@@ -34,14 +34,14 @@
 	<div class="row no-margin">
 	<!-- <div class="col-md-12 bluebackground">
 	</div> -->
-	<div class="col-md-12 bluebackground">
-	<div class="col-md-4 col-md-offset-2">
+	<div class="col-md-12 bluebackground padding-0">
+	<div class="col-md-4 col-md-offset-2 col-sm-4">
 	  	<!-- content -->
-	  	<img src="/img/surface-pro-4.png" alt="laptop" height="540px" />
+	  <!-- <img src="/img/surface-pro-4.png" alt="laptop" height="540px" /> -->
 	 </div>
-	<div class="col-md-4">
+	<div class="col-md-6 col-sm-8 description-section">
 	   <div th:if="${!displayAppLogos}" id="applist" style="margin-top: 60px; border: 0px;">
-		<ul>
+		<ul class="liststyle">
 			<li th:each="app: ${apps}">
 				<a class= "btn btn-default btn-lg"  th:href="@{/app/}+${app.name}" th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></a>
 				<br th:if="${app.description != null}" />
