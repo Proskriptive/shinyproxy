@@ -40,7 +40,7 @@
 	  <!-- <img src="/img/surface-pro-4.png" alt="laptop" height="540px" /> -->
 	 </div>
 	<div class="col-md-6 col-sm-8 description-section">
-	   <div th:if="${!displayAppLogos}" id="applist" style="margin-top: 60px; border: 0px;">
+	   <div th:if="${!displayAppLogos}" id="applist" style="margin-top: 35px; border: 0px;">
 		<ul class="liststyle">
 			<li th:each="app: ${apps}">
 				<a class= "btn btn-default btn-lg"  th:href="@{/app/}+${app.name}" th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></a>
