@@ -33,15 +33,16 @@
 }
 
 .btn {
-  width: 400px;
+  width: 100%;
+      margin-bottom: 20px;
 }
 
 .app-description{
 	color:#FFFFFF;
 	font-size: 20px;
-	margin-top:20px;
 	margin-bottom:30px;
     margin-right: 30px;
+    width: 100%;
     
 }
 .heading{
@@ -115,7 +116,7 @@
 }
 @media only screen and (min-width: 1200px) {
    .description-section{
-    padding-left: 215px;
+    /* padding-left: 150px; */
 }
 }
 @media only screen and (max-width: 767px) {
@@ -124,8 +125,14 @@
 }
 .app-description {
     font-size: 18px;
+    width: 100%;
     }
 .btn {
-    width: 192px;
+    width: 100%;
+}
+.bluebackground {
+	background: url('../img/background-blue.jpeg') no-repeat;
+	    height: 459px;
+	       background-position: center;
 }
 }
