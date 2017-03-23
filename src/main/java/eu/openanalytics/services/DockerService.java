@@ -240,10 +240,11 @@ public class DockerService {
 			
 			Builder hostConfigBuilder = HostConfig.builder();
 			if (memoryLimit > 0) hostConfigBuilder.memory(memoryLimit);
+			if (app.getDockerNetwork() != null) hostConfigBuilder.networkMode(app.getDockerNetwork());
 			final HostConfig hostConfig = hostConfigBuilder
 					.portBindings(portBindings)
 					.dns(app.getDockerDns())
-					.binds(buildVolumes(app))
+					.binds(getBindVolumes(app))
 					.build();
 			
 			final ContainerConfig containerConfig = ContainerConfig.builder()
@@ -266,7 +267,7 @@ public class DockerService {
 			throw new ShinyProxyException("Failed to start container: " + e.getMessage(), e);
 		}
 
-		if (!testContainer(proxy, 20, 500, 5000)) {
+		if (!testContainer(proxy)) {
 			releaseProxy(proxy, true);
 			throw new ShinyProxyException("Container did not respond in time");
 		}
@@ -296,7 +297,13 @@ public class DockerService {
 		return null;
 	}
 	
-	private boolean testContainer(Proxy proxy, int maxTries, int waitMs, int timeoutMs) {
+	private boolean testContainer(Proxy proxy) {
+		// Default: 10 * 2sec = 20sec
+		int totalWaitMs = Integer.parseInt(environment.getProperty("shiny.proxy.container-wait-time", "20000"));
+		int maxTries = 10;
+		int waitMs = totalWaitMs / maxTries;
+		int timeoutMs = Integer.parseInt(environment.getProperty("shiny.proxy.container-wait-timeout", "5000"));
+		
 		String urlString = String.format("http://%s:%d", environment.getProperty("shiny.proxy.docker.host"), proxy.port);
 		for (int currentTry = 1; currentTry <= maxTries; currentTry++) {
 			try {
@@ -306,7 +313,7 @@ public class DockerService {
 				int responseCode = connection.getResponseCode();
 				if (responseCode == 200) return true;
 			} catch (Exception e) {
-				log.warn(String.format("Container unresponsive, trying again (%d/%d): %s", currentTry, maxTries, urlString));
+				if (currentTry > 1) log.warn(String.format("Container unresponsive, trying again (%d/%d): %s", currentTry, maxTries, urlString));
 				try { Thread.sleep(waitMs); } catch (InterruptedException ignore) {}
 			}
 		}
@@ -329,7 +336,7 @@ public class DockerService {
 		return env;
 	}
 	
-	private List<String> buildVolumes(ShinyApp app) {
+	private List<String> getBindVolumes(ShinyApp app) {
 		List<String> volumes = new ArrayList<>();
 
 		if (app.getDockerVolumes() != null) {
