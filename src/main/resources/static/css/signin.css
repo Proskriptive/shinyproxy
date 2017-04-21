@@ -1,6 +1,8 @@
 
 body {
- 
+
+  padding-bottom: 40px;
+  background-color: #eee;
 }
  @font-face {
             font-family: 'LiberationSans-Bold';

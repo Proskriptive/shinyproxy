@@ -2,28 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head lang="en">
-<title th:text="${title}"></title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link
-	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-	th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
-	type="text/css" rel="stylesheet" media="screen" />
-<link
-	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-	type="text/css" rel="stylesheet" media="screen" />
-<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
-	th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
-<!-- Custom styles for this template -->
-<link th:href="@{/css/signin.css}" type="text/css" rel="stylesheet"
-	media="screen"></link>
+
+	<title th:text="${title}"></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link
+		href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+		th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
+		type="text/css" rel="stylesheet" media="screen" />
+	<link href="https://cdn.jsdelivr.net/bootstrap-social/5.1.1/bootstrap-social.css" 
+		type="text/css" rel="stylesheet" media="screen" />
+	<link href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css" 
+		type="text/css" rel="stylesheet" media="screen" />
+	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
+		th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
+	<!-- Custom styles for this template -->
+	<link th:href="@{/css/signin.css}" 
+		type="text/css" rel="stylesheet" media="screen" ></link>
 </head>
 <body>
-	<!-- navigation bar -->
-	<!-- <div th:replace="../fragments/navbar :: navbar"></div> -->
 
 	<!-- content -->
-	<div class="signinbackground">
+		<div class="container">
 
+	<div class="signinbackground">
+	<div th:if="${@authenticationTypeProxy.name() != 'social'}">
 		<form class="form-signin white-background" action="login"
 			method="POST">
 			<div class="row">
@@ -70,6 +72,8 @@
 					<button class="btn btn-primary btn-block text-right sign-button"
 						type="submit">Sign in</button>
 				</div>
+				
+		</div>
 				<!--<div class="col-md-12" style="visibility: hidden;">
 					<p class="dont-have">
 						Don't have an account? <span class="sign-link"> Sign up</span>
@@ -82,7 +86,15 @@
 				</div>
 			</div>
 		</form>
-
+			<div th:if="${@authenticationTypeProxy.name() == 'social'}">
+			<br/><h2 class="form-signin form-signin-heading">Please sign in:</h2>
+			<form th:each="provider : ${@socialProviders}" class="form-signin" method="POST" th:action="@{/signin/__${provider}__}">
+				<button th:class="@{btn btn-block btn-social btn-__${provider}__}" type="submit">
+					<span th:class="@{fa fa-__${provider}__}"></span> Sign in with <span th:text="${provider.label()}"></span>
+				</button>
+			</form>
+		</div>
+ 
 	</div>
 
 </body>
