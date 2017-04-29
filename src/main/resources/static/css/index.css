@@ -10,7 +10,6 @@
 }
 .bluebackground {
 	background: url('../img/background-blue.jpeg') no-repeat;
-	background: url('../img/indeximage.png') no-repeat;
 	    height: 600px;
 	       background-position: center;
 }
@@ -23,7 +22,7 @@
     overflow-x: hidden;
 }
 .bluebackimage{
-	background: url('../img/surface-pro-4.png') no-repeat;
+	background: url('../img/background-blue.jpeg') no-repeat;
 	    height: 580px;
 	       background-position: center;
 }
