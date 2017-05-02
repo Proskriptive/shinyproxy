@@ -40,7 +40,7 @@ public class LoginController {
 		map.put("title", environment.getProperty("shiny.proxy.title"));
 		map.put("logo", environment.getProperty("shiny.proxy.logo-url"));
 		if (error.isPresent()){
-			map.put("error", "Invalid user name or password");
+			map.put("error", "Oops ! That email/password combination is not valid");
 		}
         return "login";
     }
