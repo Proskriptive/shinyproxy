@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Feb 26 17:57:53 MST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-015a-7d12-dfa4-000013b81138 
+on database directory memory:/data01/development/shinyproxy/databaseName=metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@2cc6c8db 
+Loaded from file:/home/brt-srv-01/.cache/spark/spark-2.0.0-bin-hadoop2.7/jars/derby-10.11.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_121-b13
+user.dir=/data01/development/shinyproxy
+os.name=Linux
+os.arch=amd64
+os.version=4.4.0-62-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

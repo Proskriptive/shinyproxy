@@ -1,0 +1,29 @@
+---
+title: "Index Page"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+ 
+ We have identified that we need images to be placed in the github repository so that we can build this correctly.  There are two separate sections of the index page, and we have identified the names of each image.   
+ 
+##Top Index Page
+There are 2 images missing here.
+
+* Upper Right - http://localhost:8080/img/proskriptive-image.jpg
+* Lowere Left - http://localhost:8080/img/barchart.jpg
+
+
+![top section](~/Pictures/indexpage/top_index.png)
+
+###Bottom of Index Page
+There are 3 images missing in the middle section. 
+
+* Upper Left - http://localhost:8080/img/readmissionimage.jpg
+* Middle Right - http://localhost:8080/img/hospitalimage.jpg
+* Lower Left - http://localhost:8080/img/hacimage.jpg
+
+![bottom section](~/Pictures/indexpage/middle_index_page.png)
+ 
+ 
+There are no issues in the very last portion of the index page.

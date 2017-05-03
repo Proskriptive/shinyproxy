@@ -1,0 +1,95 @@
+17/02/26 17:57:50 INFO SparkContext: Running Spark version 2.0.0
+17/02/26 17:57:50 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/02/26 17:57:50 INFO SecurityManager: Changing view acls to: brt-srv-01
+17/02/26 17:57:50 INFO SecurityManager: Changing modify acls to: brt-srv-01
+17/02/26 17:57:50 INFO SecurityManager: Changing view acls groups to: 
+17/02/26 17:57:50 INFO SecurityManager: Changing modify acls groups to: 
+17/02/26 17:57:50 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(brt-srv-01); groups with view permissions: Set(); users  with modify permissions: Set(brt-srv-01); groups with modify permissions: Set()
+17/02/26 17:57:50 INFO Utils: Successfully started service 'sparkDriver' on port 37716.
+17/02/26 17:57:50 INFO SparkEnv: Registering MapOutputTracker
+17/02/26 17:57:50 INFO SparkEnv: Registering BlockManagerMaster
+17/02/26 17:57:50 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-592ed457-ba1a-4980-8145-aac34d050bb6
+17/02/26 17:57:50 INFO MemoryStore: MemoryStore started with capacity 366.3 MB
+17/02/26 17:57:50 INFO SparkEnv: Registering OutputCommitCoordinator
+17/02/26 17:57:50 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+17/02/26 17:57:50 INFO SparkUI: Bound SparkUI to 127.0.0.1, and started at http://127.0.0.1:4040
+17/02/26 17:57:50 INFO SparkContext: Added JAR file:/usr/lib64/microsoft-r/3.3/lib64/R/library/sparklyr/java/sparklyr-2.0-2.11.jar at spark://127.0.0.1:37716/jars/sparklyr-2.0-2.11.jar with timestamp 1488157070970
+17/02/26 17:57:51 INFO Executor: Starting executor ID driver on host localhost
+17/02/26 17:57:51 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 35881.
+17/02/26 17:57:51 INFO NettyBlockTransferService: Server created on 127.0.0.1:35881
+17/02/26 17:57:51 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 127.0.0.1, 35881)
+17/02/26 17:57:51 INFO BlockManagerMasterEndpoint: Registering block manager 127.0.0.1:35881 with 366.3 MB RAM, BlockManagerId(driver, 127.0.0.1, 35881)
+17/02/26 17:57:51 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 127.0.0.1, 35881)
+17/02/26 17:57:51 WARN SparkContext: Use an existing SparkContext, some configuration may not take effect.
+17/02/26 17:57:51 WARN SparkContext: Use an existing SparkContext, some configuration may not take effect.
+17/02/26 17:57:51 INFO HiveSharedState: Warehouse path is 'file:/data01/development/shinyproxy/spark-warehouse'.
+17/02/26 17:57:51 INFO SparkSqlParser: Parsing command: SHOW TABLES
+17/02/26 17:57:52 INFO HiveUtils: Initializing HiveMetastoreConnection version 1.2.1 using Spark classes.
+17/02/26 17:57:52 INFO HiveMetaStore: 0: Opening raw store with implemenation class:org.apache.hadoop.hive.metastore.ObjectStore
+17/02/26 17:57:52 INFO ObjectStore: ObjectStore, initialize called
+17/02/26 17:57:53 INFO Persistence: Property hive.metastore.integral.jdo.pushdown unknown - will be ignored
+17/02/26 17:57:53 INFO Persistence: Property datanucleus.cache.level2 unknown - will be ignored
+17/02/26 17:57:54 INFO ObjectStore: Setting MetaStore object pin classes with hive.metastore.cache.pinobjtypes="Table,StorageDescriptor,SerDeInfo,Partition,Database,Type,FieldSchema,Order"
+17/02/26 17:57:54 INFO Datastore: The class "org.apache.hadoop.hive.metastore.model.MFieldSchema" is tagged as "embedded-only" so does not have its own datastore table.
+17/02/26 17:57:54 INFO Datastore: The class "org.apache.hadoop.hive.metastore.model.MOrder" is tagged as "embedded-only" so does not have its own datastore table.
+17/02/26 17:57:55 INFO Datastore: The class "org.apache.hadoop.hive.metastore.model.MFieldSchema" is tagged as "embedded-only" so does not have its own datastore table.
+17/02/26 17:57:55 INFO Datastore: The class "org.apache.hadoop.hive.metastore.model.MOrder" is tagged as "embedded-only" so does not have its own datastore table.
+17/02/26 17:57:55 INFO MetaStoreDirectSql: Using direct SQL, underlying DB is DERBY
+17/02/26 17:57:55 INFO ObjectStore: Initialized ObjectStore
+17/02/26 17:57:55 WARN ObjectStore: Version information not found in metastore. hive.metastore.schema.verification is not enabled so recording the schema version 1.2.0
+17/02/26 17:57:55 WARN ObjectStore: Failed to get database default, returning NoSuchObjectException
+17/02/26 17:57:55 INFO HiveMetaStore: Added admin role in metastore
+17/02/26 17:57:55 INFO HiveMetaStore: Added public role in metastore
+17/02/26 17:57:55 INFO HiveMetaStore: No user is added in admin role, since config is empty
+17/02/26 17:57:55 INFO HiveMetaStore: 0: get_all_databases
+17/02/26 17:57:55 INFO audit: ugi=brt-srv-01	ip=unknown-ip-addr	cmd=get_all_databases	
+17/02/26 17:57:55 INFO HiveMetaStore: 0: get_functions: db=default pat=*
+17/02/26 17:57:55 INFO audit: ugi=brt-srv-01	ip=unknown-ip-addr	cmd=get_functions: db=default pat=*	
+17/02/26 17:57:55 INFO Datastore: The class "org.apache.hadoop.hive.metastore.model.MResourceUri" is tagged as "embedded-only" so does not have its own datastore table.
+17/02/26 17:57:55 INFO SessionState: Created HDFS directory: /tmp/hive/brt-srv-01
+17/02/26 17:57:55 INFO SessionState: Created local directory: /tmp/brt-srv-01
+17/02/26 17:57:55 INFO SessionState: Created local directory: /tmp/4f0dc047-aa9c-4ae9-8ffd-5a2fc038f5cf_resources
+17/02/26 17:57:55 INFO SessionState: Created HDFS directory: /tmp/hive/brt-srv-01/4f0dc047-aa9c-4ae9-8ffd-5a2fc038f5cf
+17/02/26 17:57:55 INFO SessionState: Created local directory: /tmp/brt-srv-01/4f0dc047-aa9c-4ae9-8ffd-5a2fc038f5cf
+17/02/26 17:57:55 INFO SessionState: Created HDFS directory: /tmp/hive/brt-srv-01/4f0dc047-aa9c-4ae9-8ffd-5a2fc038f5cf/_tmp_space.db
+17/02/26 17:57:55 INFO HiveClientImpl: Warehouse location for Hive client (version 1.2.1) is file:/data01/development/shinyproxy/spark-warehouse
+17/02/26 17:57:55 INFO SessionState: Created local directory: /tmp/a29d3e3a-8f8a-436a-8079-204776d014f0_resources
+17/02/26 17:57:55 INFO SessionState: Created HDFS directory: /tmp/hive/brt-srv-01/a29d3e3a-8f8a-436a-8079-204776d014f0
+17/02/26 17:57:55 INFO SessionState: Created local directory: /tmp/brt-srv-01/a29d3e3a-8f8a-436a-8079-204776d014f0
+17/02/26 17:57:55 INFO SessionState: Created HDFS directory: /tmp/hive/brt-srv-01/a29d3e3a-8f8a-436a-8079-204776d014f0/_tmp_space.db
+17/02/26 17:57:55 INFO HiveClientImpl: Warehouse location for Hive client (version 1.2.1) is file:/data01/development/shinyproxy/spark-warehouse
+17/02/26 17:57:55 INFO HiveMetaStore: 0: create_database: Database(name:default, description:default database, locationUri:file:/data01/development/shinyproxy/spark-warehouse, parameters:{})
+17/02/26 17:57:55 INFO audit: ugi=brt-srv-01	ip=unknown-ip-addr	cmd=create_database: Database(name:default, description:default database, locationUri:file:/data01/development/shinyproxy/spark-warehouse, parameters:{})	
+17/02/26 17:57:56 INFO HiveMetaStore: 0: get_database: default
+17/02/26 17:57:56 INFO audit: ugi=brt-srv-01	ip=unknown-ip-addr	cmd=get_database: default	
+17/02/26 17:57:56 INFO HiveMetaStore: 0: get_database: default
+17/02/26 17:57:56 INFO audit: ugi=brt-srv-01	ip=unknown-ip-addr	cmd=get_database: default	
+17/02/26 17:57:56 INFO HiveMetaStore: 0: get_tables: db=default pat=*
+17/02/26 17:57:56 INFO audit: ugi=brt-srv-01	ip=unknown-ip-addr	cmd=get_tables: db=default pat=*	
+17/02/26 17:57:56 INFO SparkSqlParser: Parsing command: tableName
+17/02/26 17:57:56 INFO SparkSqlParser: Parsing command: isTemporary
+17/02/26 17:57:56 INFO SparkContext: Starting job: collect at utils.scala:195
+17/02/26 17:57:56 INFO DAGScheduler: Got job 0 (collect at utils.scala:195) with 1 output partitions
+17/02/26 17:57:56 INFO DAGScheduler: Final stage: ResultStage 0 (collect at utils.scala:195)
+17/02/26 17:57:56 INFO DAGScheduler: Parents of final stage: List()
+17/02/26 17:57:56 INFO DAGScheduler: Missing parents: List()
+17/02/26 17:57:56 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[2] at collect at utils.scala:195), which has no missing parents
+17/02/26 17:57:56 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 4.0 KB, free 366.3 MB)
+17/02/26 17:57:56 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 2.4 KB, free 366.3 MB)
+17/02/26 17:57:56 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 127.0.0.1:35881 (size: 2.4 KB, free: 366.3 MB)
+17/02/26 17:57:56 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1012
+17/02/26 17:57:56 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[2] at collect at utils.scala:195)
+17/02/26 17:57:56 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+17/02/26 17:57:56 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, partition 0, PROCESS_LOCAL, 5443 bytes)
+17/02/26 17:57:56 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+17/02/26 17:57:56 INFO Executor: Fetching spark://127.0.0.1:37716/jars/sparklyr-2.0-2.11.jar with timestamp 1488157070970
+17/02/26 17:57:56 INFO TransportClientFactory: Successfully created connection to /127.0.0.1:37716 after 7 ms (0 ms spent in bootstraps)
+17/02/26 17:57:56 INFO Utils: Fetching spark://127.0.0.1:37716/jars/sparklyr-2.0-2.11.jar to /tmp/spark-2965ec01-ed86-4674-bfb0-8f6902dbc053/userFiles-17d02325-e243-43fb-8dcc-eb7f1812db6c/fetchFileTemp6288630742850481970.tmp
+17/02/26 17:57:56 INFO Executor: Adding file:/tmp/spark-2965ec01-ed86-4674-bfb0-8f6902dbc053/userFiles-17d02325-e243-43fb-8dcc-eb7f1812db6c/sparklyr-2.0-2.11.jar to class loader
+17/02/26 17:57:57 INFO CodeGenerator: Code generated in 182.965854 ms
+17/02/26 17:57:57 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1021 bytes result sent to driver
+17/02/26 17:57:57 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 326 ms on localhost (1/1)
+17/02/26 17:57:57 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+17/02/26 17:57:57 INFO DAGScheduler: ResultStage 0 (collect at utils.scala:195) finished in 0.338 s
+17/02/26 17:57:57 INFO DAGScheduler: Job 0 finished: collect at utils.scala:195, took 0.455300 s
+17/02/26 17:58:25 INFO BlockManagerInfo: Removed broadcast_0_piece0 on 127.0.0.1:35881 in memory (size: 2.4 KB, free: 366.3 MB)
