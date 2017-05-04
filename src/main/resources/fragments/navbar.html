@@ -121,12 +121,12 @@
            <div class="row">
             <div class="col-md-2 col-sm-4 col-xl-6" style="background:#12314D;height:50px">
                 <div style="padding:3% 0% 0% 0%;margin-top:5px;">
-                    <img th:src="${logo}" class="img img-responsive" /><a class="navbar-brand" href="/" th:text="${title}"></a>
+                    <img th:src="${logo}" class="img img-responsive" />
                 </div>
             </div>
             <div class="col-md-10 col-sm-8 col-xl-6" style="color:white;background-color:#143755;height:50px;">
                 <div class="p-t-10 pull-right">
-                    <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<label>UserName</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<label><a  th:href="@{/admin}" sec:authorize="hasAnyRole(#vars.adminGroups)"></a></label>&nbsp;&nbsp;&nbsp;&nbsp;
                     <div class="dropdown">
                         <span id="dropdownlabel" style="background-color:#143755;" class="fa fa-sort-desc dropbtn" aria-hidden="true"></span>
                         <div id="dropdownmenu" class="dropdown-content">
