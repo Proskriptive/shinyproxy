@@ -1,15 +1,133 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head lang="en">
-	<title th:text="${title}"></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link
-		href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-		th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
-		rel="stylesheet" media="screen" />
+<head lang = "en">
+<link
+	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
+	type="text/css" rel="stylesheet" media="screen" />
+<link
+	href="https://cdn.jsdelivr.net/bootstrap-social/5.1.1/bootstrap-social.css"
+	type="text/css" rel="stylesheet" media="screen" />
+<link
+	href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css"
+	type="text/css" rel="stylesheet" media="screen" />
 	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
-		th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
+	th:src="@{/webjars/jquery/2.2.2/jquery.min.js}" type="text/javascript"></script>
+	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
+	media="screen"></link>
+	<script type="text/javascript" th:inline="javascript">
+	$(document).ready(function(){
+		$('#dropdownlabel').click(function(){ 			
+			//  $('.dropdown-toggle', this).trigger('click'); 
+			  document.getElementById("dropdownmenu").classList.toggle("show");
+			});		
+	});
+	 
+	document.onclick = function (event) {
+		debugger;
+       // if (!event.target.matches('.dropbtn')) {
+            var dropdowns = $(".dropdown-content");                 
+                //if (dropdowns.classList.contains('show')) {
+                //	dropdowns.classList.remove('show');
+                //}         
+       // }
+    }
+	
+	</script>	
+	<style>
+
+        .p-t-10 {
+            padding-top: 10px;
+        }
+
+        .sidemenu > a {
+            text-decoration: none;
+            padding-top: .8em;
+            padding-bottom: 0px;
+            width: 100%;
+        }
+
+        .sidemenu {
+            margin: 15px;
+            margin-top: 0px;
+            padding: 0px;
+            text-decoration: none;
+        }
+
+        .sidemenu-image {
+            margin: 15px;
+            margin-top: 0px;
+            padding: 0px;
+            text-decoration: none;
+        }
+
+        .imglogo {
+            width: 160px;
+            height: 32px;
+            margin-right: auto;
+        }
+
+        hr {
+            margin: 13px 0px 13px 0px;
+        }
+
+        .dropbtn {
+            background-color: #01538F;
+            color: white;
+            /*padding: 16px;*/
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .dropbtn:hover, .dropbtn:focus {
+                background-color: #01538F;
+            }
+
+        .dropdown {
+            float: right;
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            right: 0;
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                /*text-align:center;*/
+            }
+
+            .dropdown-content hr {
+                margin: 0px;
+                padding: 0px;
+            }
+
+        .dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+/*         .dropdown:hover .dropdown-content { */
+/*         display: block; */
+/*       } */
+
+        .show {
+            display: block;
+        }
+	</style>
 </head>
 <body>
 	<!-- navigation bar -->
@@ -31,7 +149,7 @@
 		        });
 		    }, [[${heartbeatRate}]]);
 		};
-		heartbeat();
+		heartbeat();			
 	</script>
 </body>
 </html>
