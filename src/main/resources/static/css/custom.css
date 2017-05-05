@@ -414,6 +414,9 @@ input[type="text"], input[type="password"], textarea, select {
 span.footer {
 	
 }
+a#user {
+	color:white;
+}
 
 
 

@@ -19,7 +19,7 @@ import java.security.Principal;
 import java.util.List;
 
 import javax.inject.Inject;
-
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,8 @@ public class IndexController {
 	Environment environment;
 
 	@RequestMapping("/")
-    String index(ModelMap map, Principal principal) {
+    String index(ModelMap map, Principal principal, HttpServletRequest request) {
+		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
 		List<ShinyApp> apps = userService.getAccessibleApps((Authentication) principal);
 		boolean displayAppLogos = false;
 		for (ShinyApp app: apps) {
@@ -53,6 +54,7 @@ public class IndexController {
 		map.put("apps", apps.toArray());
 		map.put("displayAppLogos", displayAppLogos);
 		map.put("adminGroups", userService.getAdminRoles());
+		map.put("userName",userName);
         return "index";
     }
 }

@@ -364,9 +364,9 @@ $(function () {
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div class="userArea pull-right" style="">
                     <div>
-                        <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<label style="color:#7894A7;line-height:40px;">UserName</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a th:text="${userName}" th:href="@{/admin}" sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <div class="dropdown">
-                            <span class="fa fa-sort-desc dropbtn" id='spandropdown' style="color:#7894A7;line-height:40px;" aria-hidden="true"></span>
+                            <span class="fa fa-sort-desc dropbtn" id='spandropdown' style="color:#7894A7;line-height:27px;" aria-hidden="true"></span>
                             <div id="dropdownmenu" class="dropdown-content">
                                 <a href="#help"><i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;Help</a>
                                 <hr />
