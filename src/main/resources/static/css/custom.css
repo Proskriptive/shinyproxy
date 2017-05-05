@@ -106,6 +106,7 @@ padding:0;
 
 body {
   background-color: #ffffff;
+  font-family:'Lato';
 }
  @font-face {
             font-family: 'LiberationSans-Bold';
@@ -409,6 +410,9 @@ input[type="text"], input[type="password"], textarea, select {
 	background-color: #91B4CE;
 	border-style:none;
 	border-color:#91B4CE;
+}
+span.footer {
+	
 }
 
 

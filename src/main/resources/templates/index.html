@@ -10,22 +10,69 @@
 		rel="stylesheet" media="screen" />
 	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
 		th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
  	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet" media="screen"></link>		
  	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
+
 <script>
 $(function(){
-	var width=0 , height=0;
-	$('.d').css({'opacity':.4});
-	$('#selectedimg').css({'opacity':1});
-	
+	$('#spandropdown').click(function(){
+		  document.getElementById("dropdownmenu").classList.toggle("show");
+	});
 });
 </script>
 
-    <style>
+<script>
+
+
+
+$(function () {
+    $('#tabI3').find('.tabItemDiv').removeClass('well').addClass('well_tab-item');
+    $('#tabP3').css('display', 'block');
+    $('.tab-item > a').click(function (e) {
+    	debugger;
+        e.preventDefault();
+        var tabItemId = $(this).attr('id');
+        $('.tab-item > a').each(function () {
+        	
+            var id = $(this).attr('id');
+            if ($(this).find('.tabItemDiv').hasClass('well')) {
+                if (id == tabItemId) {
+                    $(this).find('.tabItemDiv').removeClass('well').addClass('well_tab-item');
+                    
+                    var s = tabItemId.substring(4);
+                    $('.tab-panel').each(function () {
+                        var tabId = $(this).attr('id');
+                        if (tabId == 'tabP' + s) {
+                            if ($(this).css('display') == 'none') {
+                               
+                                $(this).css('display', 'block');
+                            }else {
+                                $(this).css('display', 'none');
+                            }
+                        }else {
+                            $(this).css('display', 'none');
+                        }
+                    });
+                    
+                }
+            } else {
+                if (id != tabItemId) {
+                    $(this).find('.tabItemDiv').removeClass('well_tab-item').addClass('well');
+                }
+            }
+        });
+
+    });
+});
+
+
+</script>
+
+<style>
         body {
-            font-family: lato;
+           
             font-size: 15px;
         }
 
@@ -95,7 +142,6 @@ $(function(){
 
         .well_tab-item {
             min-height: 20px;
-            margin-bottom: 0px;
             padding: 19px;
             border: 1px solid white;
             border-radius: 0px;
@@ -142,7 +188,7 @@ $(function(){
             }
 
         .bgimage {
-            background-image: url(img/bg.jpg);
+            background-image: url(../img/bg.jpg);
             background-size: 100% 100%;
             background-repeat: no-repeat;
             padding: 0px;
@@ -312,15 +358,15 @@ $(function(){
         <div class="row" style="margin-bottom:0px; background-color:white;">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div class="logoArea" style="">
-                    <img src="img/logo-dark.png" class="img img-responsive" height="30" />
+                    <img src="../img/logo-dark.png" class="img img-responsive" height="30" />
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div class="userArea pull-right" style="">
                     <div>
-                        <img src="img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<label style="color:#7894A7;line-height:40px;">UserName</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<label style="color:#7894A7;line-height:40px;">UserName</label>&nbsp;&nbsp;&nbsp;&nbsp;
                         <div class="dropdown">
-                            <span class="fa fa-sort-desc dropbtn" style="color:#7894A7;line-height:40px;" onclick="dropdownmenuFunction();" aria-hidden="true"></span>
+                            <span class="fa fa-sort-desc dropbtn" id='spandropdown' style="color:#7894A7;line-height:40px;" aria-hidden="true"></span>
                             <div id="dropdownmenu" class="dropdown-content">
                                 <a href="#help"><i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;Help</a>
                                 <hr />
@@ -338,13 +384,15 @@ $(function(){
         <div class="row bgimage">
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="bg-img-text">
-                    <span style=" font-size:60px;letter-spacing:1px;">Your data sync</span>
+                    <span style=" font-size:60px;letter-spacing:1px;color:white;">Your data sync</span>
                     <p style=" margin-top:10px; margin-bottom:10px;letter-spacing:1px;line-height:200%;">
                         Proin ultricies rutrum tellus, at tempus lacus ultrices ac. Sed mattis mattis odio,
                         ut pellentesque felis imperdiet ut. Praesent ullamcorper urna non velit
                         faucibus
                     </p>
-                    <button type="button" class="grad-btn" style="font-size:20px;">Accress Performance</button>
+                    <form method="post" action="app/intelligencesuite">
+    				<button type="submit" class="grad-btn" style="font-size:20px;">Access Performance</button>
+					</form>                    
                 </div>
             </div>
         </div>
@@ -354,7 +402,7 @@ $(function(){
                 <a id="tabI1" href="#">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
                         <div class="row">
-                            <img src="img/icon-box-market.jpg" alt="market profiler." />
+                            <img src="../img/iconboxmarket.jpg" alt="market profiler." />
                         </div>
                         <div class="row">
                             <h3> Market Profiler</h3>
@@ -365,7 +413,7 @@ $(function(){
                 <a id="tabI2" href="#">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
                         <div class="row">
-                            <img src="img/icon-box-provider.jpg" />
+                            <img src="../img/iconboxprovider.jpg" />
                         </div>
                         <div class="row">
                             <h3>Provider Profiler</h3>
@@ -376,7 +424,7 @@ $(function(){
                 <a id="tabI3" href="#">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
                         <div class="row">
-                            <img src="img/icon-box-performance.jpg" />
+                            <img src="../img/iconboxperformance.jpg" />
                         </div>
                         <div class="row">
                             <h3>Performance</h3>
@@ -387,7 +435,7 @@ $(function(){
                 <a id="tabI4" href="#">
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
                         <div class="row">
-                            <img src="img/icon-box-population.jpg" />
+                            <img src="../img/iconboxpopulation.jpg" />
                         </div>
                         <div class="row">
                             <h3>Population Profiler</h3>
@@ -400,11 +448,11 @@ $(function(){
 
         <div class="row tab-panel" id="tabP3" style="padding-left:10%; padding-right:10%;text-align:justify;">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <img src="img/charts.jpg" alt="charts images is here." class="img img-responsive" />
+                <img src="../img/charts.jpg" alt="charts images is here." class="img img-responsive" />
             </div>
             <div class="col-md-6">
                 <p>Research shows that data science is the key to unlocking an estimated $300 billion per year in savings within the healthcare industry.</p>
-                <p>Penalties from the Centers of Medicare & Medicaid Service (CMS) accounts for a portion of where these savings can be achieved.</p>
+                <p>Penalties from the Centers of Medicare &amp; Medicaid Service (CMS) accounts for a portion of where these savings can be achieved.</p>
                 <p>The account intellingence tool is designed to:</p>
                 <ul>
                     <li>scrub throw your list of accounts to surface stratigic sales opportunities.</li>
@@ -479,7 +527,7 @@ $(function(){
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div class="pull-right" style="margin-right:15%;">
-                    <span>Powered by <img src="img/proskriptivepic.png" alt="footer image." height="30" /></span>
+                    <span>Powered by <img src="../img/proskriptivepic.png" alt="footer image." height="30" /></span>
                 </div>
             </div>
         </div>
