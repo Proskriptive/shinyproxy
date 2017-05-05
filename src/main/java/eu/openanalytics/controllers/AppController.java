@@ -62,6 +62,7 @@ public class AppController {
 		map.put("container", "/" + mapping + environment.getProperty("shiny.proxy.landing-page") + queryString);
 		map.put("heartbeatRate", environment.getProperty("shiny.proxy.heartbeat-rate", "10000"));
 		map.put("adminGroups", userService.getAdminRoles());
+		map.put("userName",userName);
 		
 		return "app";
 	}
