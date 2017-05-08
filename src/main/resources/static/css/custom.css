@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400');
 
 .footer{
 	position:relative;
@@ -15,6 +15,7 @@
 	color:#FFFFFF;
 	text-align:center;
 	font-family:'Lato',sans-serif;
+	font-weight: 300;
 	}
 	
 	.divImageSpane
@@ -416,6 +417,9 @@ span.footer {
 }
 a#user {
 	color:white;
+}
+.userArea  a {
+	text-decoration:none;
 }
 
 
