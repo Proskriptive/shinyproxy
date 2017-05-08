@@ -417,6 +417,7 @@ span.footer {
 }
 a#user {
 	color:white;
+	text-decoration:none;
 }
 .userArea  a {
 	text-decoration:none;
