@@ -18,6 +18,7 @@
 	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	media="screen"></link>
 	<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
 	$(document).ready(function(){
 		$('#dropdownlabel').click(function(){ 			
 			//  $('.dropdown-toggle', this).trigger('click'); 
@@ -25,16 +26,20 @@
 			});		
 	});
 	 
-	document.onclick = function (event) {
-	
-       // if (!event.target.matches('.dropbtn')) {
-            var dropdowns = $(".dropdown-content");                 
-                //if (dropdowns.classList.contains('show')) {
-                //	dropdowns.classList.remove('show');
-                //}         
-       // }
-    }
-	
+	window.onclick = function (event) {
+	    if (!event.target.matches('.dropbtn')) {
+
+	        var dropdowns = document.getElementsByClassName("dropdown-content");
+	        var i;
+	        for (i = 0; i < dropdowns.length; i++) {
+	            var openDropdown = dropdowns[i];
+	            if (openDropdown.classList.contains('show')) {
+	                openDropdown.classList.remove('show');
+	            }
+	        }
+	    }
+	}
+	//]]>
 	</script>	
 	<style>
 
