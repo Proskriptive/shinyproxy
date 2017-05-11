@@ -148,6 +148,29 @@ $(function () {
         h3 {
             color: #4F4F4F;
         }
+        .userapps button {
+        background-color:#013B63;
+        }
+        
+        .userapps {
+        margin:5px;
+        display:inline-block;
+        }
+        
+        .btn {
+        border-radius:2px;
+        padding:10px 30px;
+        color:white;
+       
+        }
+        
+        #spandropdown {
+        background-color:white;
+        }
+        
+        #staticform {
+        padding-bottom:12px;
+        }
 
         .well_tab-item {
             min-height: 20px;
@@ -317,6 +340,10 @@ $(function () {
             padding-bottom: 15%;
             padding-top: 5%;
         }
+        
+        .bg-img-text span {
+            font-weight: 300;
+        }
 
         .logoArea {
             margin-left: 25%;
@@ -327,14 +354,18 @@ $(function () {
             margin-right: 25%;
             margin-top: 7px;
         }
+        
+        .pull-right span {
+        color: #818181;
+        }
 
         @media only screen and (min-device-width: 768px) {
             .bg-img-text {
-                margin-left: 25%;
+                margin-left: 10%;
                 color: white;
                 padding-bottom: 10%;
                 padding-bottom: 15%;
-                padding-top: 5%;
+                padding-top: 6%;
             }
         }
 
@@ -395,7 +426,7 @@ $(function () {
                     <div>
                         <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a th:text="${userName}" th:href="@{/admin}" sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <div class="dropdown">
-                            <span class="fa fa-sort-desc dropbtn" id='spandropdown' style="color:#7894A7;line-height:27px;" aria-hidden="true"></span>
+                            <span class="fa fa-sort-desc dropbtn" id='spandropdown' style="color:#7894A7;line-height:21px;" aria-hidden="true"></span>
                             <div id="dropdownmenu" class="dropdown-content">
                                 <a href="#help"><i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;Help</a>
                                 <hr />
@@ -411,17 +442,21 @@ $(function () {
         </div>
 
         <div class="row bgimage">
-            <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="bg-img-text">
                     <span style=" font-size:60px;letter-spacing:1px;color:white;">Your data sync</span>
                     <p style=" margin-top:10px; margin-bottom:10px;letter-spacing:1px;line-height:200%;">
-                        Proin ultricies rutrum tellus, at tempus lacus ultrices ac. Sed mattis mattis odio,
-                        ut pellentesque felis imperdiet ut. Praesent ullamcorper urna non velit
-                        faucibus
+                       What insights will you uncover today? Click on your Apps below to find out:
                     </p>
-                    <form method="post" action="app/intelligencesuite">
+                    
+                    <form method="post" action="app/intelligencesuite" id = "staticform">
     				<button type="submit" class="grad-btn" style="font-size:20px;">Access Performance</button>
-					</form>                    
+					</form>     
+					<div th:each="app: ${apps}" class = "userapps"> 
+					<form method = "post" action = "@{app/}+${app.name}"  >
+					<button type = "submit" class = "btn btn-primary" th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></button>
+					</form>
+					</div>           
                 </div>
             </div>
         </div>
