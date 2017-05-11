@@ -335,9 +335,8 @@ $(function () {
 
         .bg-img-text {
             margin-left: 25%;
-            color: white;
-            padding-bottom: 10%;
-            padding-bottom: 15%;
+            color: white;            
+            padding-bottom: 12%;
             padding-top: 5%;
         }
         
@@ -362,9 +361,8 @@ $(function () {
         @media only screen and (min-device-width: 768px) {
             .bg-img-text {
                 margin-left: 10%;
-                color: white;
-                padding-bottom: 10%;
-                padding-bottom: 15%;
+                color: white;                
+                padding-bottom: 12%;
                 padding-top: 6%;
             }
         }
@@ -372,8 +370,7 @@ $(function () {
         @media only screen and (min-device-width: 320px) and (max-device-width:767px) {
             .bg-img-text {
                 margin-left: 5%;
-                color: white;
-                padding-bottom: 10%;
+                color: white;                
                 padding-bottom: 15%;
                 padding-top: 5%;
             }
@@ -392,8 +389,7 @@ $(function () {
         @media only screen and (min-device-width: 100px) and (max-device-width:319px) {
             .bg-img-text {
                 margin-left: 0%;
-                color: white;
-                padding-bottom: 10%;
+                color: white;                
                 padding-bottom: 15%;
                 padding-top: 5%;
             }
@@ -449,8 +445,8 @@ $(function () {
                        What insights will you uncover today? Click on your Apps below to find out:
                     </p>
                     
-                    <form method="post" action="app/intelligencesuite" id = "staticform">
-    				<button type="submit" class="grad-btn" style="font-size:20px;">Access Performance</button>
+                    <form method="post" action="app/intelligencesuite" id = "staticform" class = "userapps" >
+    				<button type="submit" class="btn btn-primary">Access Performance</button>
 					</form>     
 					<div th:each="app: ${apps}" class = "userapps"> 
 					<form method = "post" action = "@{app/}+${app.name}"  >
