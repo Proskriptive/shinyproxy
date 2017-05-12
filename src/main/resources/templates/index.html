@@ -2,651 +2,715 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head lang="en">
-	<title th:text="${title}"></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link
-		href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-		th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
-		rel="stylesheet" media="screen" />
-	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
-		th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
- 	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet" media="screen"></link>		
- 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<title th:text="${title}"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link
+	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
+	rel="stylesheet" media="screen" />
+<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
+	th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
+	media="screen"></link>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet" />
 
 
 <script>
-//<![CDATA[
-$(function(){
-	$('#userDiv').click(function(){
-		  document.getElementById("dropdownmenu").classList.toggle("show");
+	//<![CDATA[
+	$(function() {
+		$('#userDiv').click(function() {
+			document.getElementById("dropdownmenu").classList.toggle("show");
+		});
+		window.onclick = function(event) {
+
+			if (!(event.target.offsetParent.firstElementChild.className == 'userArea pull-right')) {
+				var dropdowns = document
+						.getElementsByClassName("dropdown-content");
+				var i;
+				for (i = 0; i < dropdowns.length; i++) {
+					var openDropdown = dropdowns[i];
+					if (openDropdown.classList.contains('show')) {
+						openDropdown.classList.remove('show');
+					}
+				}
+			}
+		}
 	});
-	  window.onclick = function (event) {
-		  
-          if (!(event.target.offsetParent.firstElementChild.className == 'userArea pull-right')) {
-              var dropdowns = document.getElementsByClassName("dropdown-content");
-              var i;
-              for (i = 0; i < dropdowns.length; i++) {
-                  var openDropdown = dropdowns[i];
-                  if (openDropdown.classList.contains('show')) {
-                      openDropdown.classList.remove('show');
-                  }
-              }
-          }
-      }  
-});
-//]]>
+	//]]>
 </script>
 <script>
-$(function () {
-    $('#tabI3').find('.tabItemDiv').removeClass('well').addClass('well_tab-item');
-    $('#tabP3').css('display', 'block');
-    $('.tab-item > a').click(function (e) {
-    	debugger;
-        e.preventDefault();
-        var tabItemId = $(this).attr('id');
-        $('.tab-item > a').each(function () {
-        	
-            var id = $(this).attr('id');
-            if ($(this).find('.tabItemDiv').hasClass('well')) {
-                if (id == tabItemId) {
-                    $(this).find('.tabItemDiv').removeClass('well').addClass('well_tab-item');
-                    
-                    var s = tabItemId.substring(4);
-                    $('.tab-panel').each(function () {
-                        var tabId = $(this).attr('id');
-                        if (tabId == 'tabP' + s) {
-                            if ($(this).css('display') == 'none') {
-                               
-                                $(this).css('display', 'block');
-                            }else {
-                                $(this).css('display', 'none');
-                            }
-                        }else {
-                            $(this).css('display', 'none');
-                        }
-                    });
-                    
-                }
-            } else {
-                if (id != tabItemId) {
-                    $(this).find('.tabItemDiv').removeClass('well_tab-item').addClass('well');
-                }
-            }
-        });
+	$(function() {
+		$('#tabI3').find('.tabItemDiv').removeClass('well').addClass(
+				'well_tab-item');
+		$('#tabP3').css('display', 'block');
+		$('.tab-item > a')
+				.click(
+						function(e) {
+							debugger;
+							e.preventDefault();
+							var tabItemId = $(this).attr('id');
+							$('.tab-item > a')
+									.each(
+											function() {
 
-    });
-});
+												var id = $(this).attr('id');
+												if ($(this).find('.tabItemDiv')
+														.hasClass('well')) {
+													if (id == tabItemId) {
+														$(this)
+																.find(
+																		'.tabItemDiv')
+																.removeClass(
+																		'well')
+																.addClass(
+																		'well_tab-item');
 
+														var s = tabItemId
+																.substring(4);
+														$('.tab-panel')
+																.each(
+																		function() {
+																			var tabId = $(
+																					this)
+																					.attr(
+																							'id');
+																			if (tabId == 'tabP'
+																					+ s) {
+																				if ($(
+																						this)
+																						.css(
+																								'display') == 'none') {
 
+																					$(
+																							this)
+																							.css(
+																									'display',
+																									'block');
+																				} else {
+																					$(
+																							this)
+																							.css(
+																									'display',
+																									'none');
+																				}
+																			} else {
+																				$(
+																						this)
+																						.css(
+																								'display',
+																								'none');
+																			}
+																		});
+
+													}
+												} else {
+													if (id != tabItemId) {
+														$(this)
+																.find(
+																		'.tabItemDiv')
+																.removeClass(
+																		'well_tab-item')
+																.addClass(
+																		'well');
+													}
+												}
+											});
+
+						});
+	});
 </script>
 <style>
-        body {
-           
-            font-size: 15px;
-        }
+body {
+	font-size: 15px;
+}
 
-        .dropbtn {
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-        }
+.dropbtn {
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+}
 
-            .dropbtn:hover, .dropbtn:focus {
-            }
+.dropbtn:hover, .dropbtn:focus {
+	
+}
 
-        .dropdown {
-            float: right;
-            position: relative;
-            display: inline-block;
-        }
+.dropdown {
+	float: right;
+	position: relative;
+	display: inline-block;
+}
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            margin-top: 0px;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            overflow: auto;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            right: 0;
-            z-index: 1;
-        }
+.dropdown-content {
+	display: none;
+	position: absolute;
+	margin-top: 0px;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	overflow: auto;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	right: 0;
+	z-index: 1;
+}
 
-            .dropdown-content a {
-                padding: 8px 16px;
-                text-decoration: none;
-                display: block;
-            }
+.dropdown-content a {
+	padding: 8px 16px;
+	text-decoration: none;
+	display: block;
+}
 
-            .dropdown-content hr {
-                margin: 0px;
-                padding: 0px;
-            }
+.dropdown-content hr {
+	margin: 0px;
+	padding: 0px;
+}
 
-        .dropdown a:hover {
-            background-color: #f1f1f1;
-        }
+.dropdown a:hover {
+	background-color: #f1f1f1;
+}
 
-        .show {
-            display: block;
-        }
+.show {
+	display: block;
+}
 
-        .tabItemDiv {
-            text-align: center;
-            border: 1px solid dashed;
-            border-collapse: collapse;
-        }
+.tabItemDiv {
+	text-align: center;
+	border: 1px solid dashed;
+	border-collapse: collapse;
+}
 
-            .tabItemDiv span {
-                color: #6798BA;
-            }
+.tabItemDiv span {
+	color: #6798BA;
+}
 
-            .tabItemDiv h3 {
-                color: #5D5D5D;
-            }
+.tabItemDiv h3 {
+	color: #5D5D5D;
+}
 
-        h3 {
-            color: #4F4F4F;
-        }
-        .userapps button {
-        background-color:#013B63;
-        }
-        
-        .userapps {
-        margin:5px;
-        display:inline-block;
-        }
-        
-        .btn {
-        border-radius:2px;
-        padding:10px 30px;
-        color:white;
-       
-        }
-        
-        #spandropdown {
-        background-color:white;
-        }
-        
-        #staticform {
-        padding-bottom:12px;
-        }
+h3 {
+	color: #4F4F4F;
+}
 
-        .well_tab-item {
-            min-height: 20px;
-            padding: 19px;
-            border: 1px solid white;
-            border-radius: 0px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
-        }
+.userapps button {
+	background-color: #013B63;
+}
 
-        .well {
-            min-height: 20px;
-            margin-bottom: 0px;
-            padding: 19px;
-            background-color: #f5f5f5;
-            border: 1px solid #e3e3e3;
-            border-radius: 0px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
-        }
+.userapps {
+	margin: 5px;
+	display: inline-block;
+}
 
-        .tab-item span {
-            cursor: pointer;
-        }
+.btn {
+	border-radius: 2px;
+	padding: 10px 30px;
+	color: white;
+}
 
-        .tab-panel {
-            display: none;
-            padding-left: 10%;
-            padding-right: 10%;
-            padding-bottom: 5%;
-            margin-top: 5%;
-            text-align: justify;
-        }
+#spandropdown {
+	background-color: white;
+}
 
-        .tab-panel-active {
-            display: block;
-        }
+#staticform {
+	padding-bottom: 12px;
+}
 
-        .tab-item {
-            width: 100%;
-            margin: 0px;
-            padding: 0px;
-        }
+.well_tab-item {
+	min-height: 20px;
+	padding: 19px;
+	border: 1px solid white;
+	border-radius: 0px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+}
 
-            .tab-item a {
-                text-decoration: none;
-            }
+.well {
+	min-height: 20px;
+	margin-bottom: 0px;
+	padding: 19px;
+	background-color: #f5f5f5;
+	border: 1px solid #e3e3e3;
+	border-radius: 0px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+}
 
-        .bgimage {
-            background-image: url(../img/bg.jpg);
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            padding: 0px;
-            color: white;
-        }
+.tab-item span {
+	cursor: pointer;
+}
 
-            .bgimage h2 {
-                color: white;
-            }
+.tab-panel {
+	display: none;
+	padding-left: 10%;
+	padding-right: 10%;
+	padding-bottom: 5%;
+	margin-top: 5%;
+	text-align: justify;
+}
 
-            .bgimage p {
-                color: white;
-            }
+.tab-panel-active {
+	display: block;
+}
 
-        h5 {
-            margin-top: 30px;
-        }
+.tab-item {
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
 
-        h4 {
-            color: black;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+.tab-item a {
+	text-decoration: none;
+}
 
-        h3 {
-            color: black;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+.bgimage {
+	background-image: url(../img/bg.jpg);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding: 0px;
+	color: white;
+}
 
-        .tab-panel h4 {
-            color: #6D6D6D;
-        }
+.bgimage h2 {
+	color: white;
+}
 
-        .tab-panel ul li {
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
+.bgimage p {
+	color: white;
+}
 
-        p {
-            color: #818181;
-        }
+h5 {
+	margin-top: 30px;
+}
 
-        li {
-            color: #818181;
-        }
+h4 {
+	color: black;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 
+h3 {
+	color: black;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 
-        .tab-panel p {
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
+.tab-panel h4 {
+	color: #6D6D6D;
+}
 
-        .tab-panel ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 10px;
-        }
+.tab-panel ul li {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
 
-            #tabP3 ul li::before {
-                content: "•";
-                font-size: 170%; /* or whatever */
-                padding-right: 5px;
-                color: #01538F; /* or whatever color you prefer */
-            }
-            
-            #tabP2 ul li::before {
-                content: "•";
-                font-size: 170%; /* or whatever */
-                padding-right: 5px;
-                color: #90B5CD;
-            }
-            
-            #tabP1 ul li::before {
-               content: "•";
-               font-size: 170%; /* or whatever */
-               padding-right: 5px;
-               color: #90B5CD;
-            }
-             #tabP4 ul li::before {
-                content: "•";
-                font-size: 170%; /* or whatever */
-                padding-right: 5px;
-                color: #90B5CD;
-            }
+p {
+	color: #818181;
+}
 
-        .grad-btn {
-            background: #18B8C9; /* For browsers that do not support gradients */
-            background: -webkit-linear-gradient(left, #18B8C9, #126DD6); /* For Safari 5.1 to 6.0 */
-            background: -o-linear-gradient(right, #18B8C9, #126DD6); /* For Opera 11.1 to 12.0 */
-            background: -moz-linear-gradient(right, #18B8C9, #126DD6); /* For Firefox 3.6 to 15 */
-            background: linear-gradient(to right, #18B8C9, #126DD6); /* Standard syntax */
-            border: 0px;
-            border-radius: 2px;
-            height: 50px;
-            padding-left: 5%;
-            padding-right: 5%;
-            margin-top: 30px;
-        }
+li {
+	color: #818181;
+}
 
-        hr {
-            margin: 0px;
-            padding: 0px;
-        }
+.tab-panel p {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
 
-        .item-container {
-        }
+.tab-panel ul {
+	list-style: none;
+	padding: 0;
+	margin-top: 80px;
+}
 
-        .questiondiv h4 {
-            font-weight: bold;
-        }
+#tabP3 ul li::before {
+	content: "•";
+	font-size: 170%; /* or whatever */
+	padding-right: 5px;
+	color: #01538F; /* or whatever color you prefer */
+}
 
-        .bg-img-text {
-            margin-left: 25%;
-            color: white;            
-            padding-bottom: 12%;
-            padding-top: 5%;
-        }
-        
-        .bg-img-text span {
-            font-weight: 300;
-        }
+#tabP2 ul li::before {
+	content: "•";
+	font-size: 170%; /* or whatever */
+	padding-right: 5px;
+	color: #90B5CD;
+}
 
-        .logoArea {
-            margin-left: 25%;
-            margin-top: 10px;
-        }
+#tabP1 ul li::before {
+	content: "•";
+	font-size: 170%; /* or whatever */
+	padding-right: 5px;
+	color: #90B5CD;
+}
 
-        .userArea {
-            margin-right: 25%;
-            margin-top: 7px;
-        }
-        
-        .pull-right span {
-        color: #818181;
-        }
+#tabP4 ul li::before {
+	content: "•";
+	font-size: 170%; /* or whatever */
+	padding-right: 5px;
+	color: #90B5CD;
+}
 
-        @media only screen and (min-device-width: 768px) {
-            .bg-img-text {
-                margin-left: 10%;
-                color: white;                
-                padding-bottom: 12%;
-                padding-top: 6%;
-            }
-        }
+.grad-btn {
+	background: #18B8C9; /* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(left, #18B8C9, #126DD6);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(right, #18B8C9, #126DD6);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(right, #18B8C9, #126DD6);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(to right, #18B8C9, #126DD6);
+	/* Standard syntax */
+	border: 0px;
+	border-radius: 2px;
+	height: 50px;
+	padding-left: 5%;
+	padding-right: 5%;
+	margin-top: 30px;
+}
 
-        @media only screen and (min-device-width: 320px) and (max-device-width:767px) {
-            .bg-img-text {
-                margin-left: 5%;
-                color: white;                
-                padding-bottom: 15%;
-                padding-top: 5%;
-            }
+hr {
+	margin: 0px;
+	padding: 0px;
+}
 
-            .logoArea {
-                margin-left: 0%;
-                margin-top: 10px;
-            }
+.item-container {
+	
+}
 
-            .userArea {
-                margin-right: 0%;
-                margin-top: 7px;
-            }
-        }
+.questiondiv h4 {
+	font-weight: bold;
+}
 
-        @media only screen and (min-device-width: 100px) and (max-device-width:319px) {
-            .bg-img-text {
-                margin-left: 0%;
-                color: white;                
-                padding-bottom: 15%;
-                padding-top: 5%;
-            }
+.bg-img-text {
+	margin-left: 25%;
+	color: white;
+	padding-bottom: 12%;
+	padding-top: 5%;
+}
 
-            .logoArea {
-                margin-left: 0%;
-                margin-top: 10px;
-            }
+.bg-img-text span {
+	font-weight: 300;
+}
 
-            .userArea {
-                margin-right: 0%;
-                margin-top: 7px;
-            }
+.logoArea {
+	margin-left: 25%;
+	margin-top: 10px;
+}
 
-            .bg-img-text span {
-            }
-        }
-    </style>
+.userArea {
+	margin-right: 25%;
+	margin-top: 7px;
+}
+
+.pull-right span {
+	color: #818181;
+}
+
+@media only screen and (min-device-width: 768px) {
+	.bg-img-text {
+		margin-left: 10%;
+		color: white;
+		padding-bottom: 12%;
+		padding-top: 6%;
+	}
+}
+
+@media only screen and (min-device-width: 320px) and
+	(max-device-width:767px) {
+	.bg-img-text {
+		margin-left: 5%;
+		color: white;
+		padding-bottom: 15%;
+		padding-top: 5%;
+	}
+	.logoArea {
+		margin-left: 0%;
+		margin-top: 10px;
+	}
+	.userArea {
+		margin-right: 0%;
+		margin-top: 7px;
+	}
+}
+
+@media only screen and (min-device-width: 100px) and
+	(max-device-width:319px) {
+	.bg-img-text {
+		margin-left: 0%;
+		color: white;
+		padding-bottom: 15%;
+		padding-top: 5%;
+	}
+	.logoArea {
+		margin-left: 0%;
+		margin-top: 10px;
+	}
+	.userArea {
+		margin-right: 0%;
+		margin-top: 7px;
+	}
+	.bg-img-text span {
+		
+	}
+}
+</style>
 </head>
 <body>
-   <div class="container-fluid">
-        <div class="row" style="margin-bottom:0px; background-color:white;">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <div class="logoArea" style="">
-                    <img src="../img/logo-dark.png" class="img img-responsive" height="30" />
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <div class="userArea pull-right" style="">
-                    <div id = "userDiv">
-                        <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a th:text="${userName}" th:href="@{/admin}" sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fa fa-sort-desc dropbtn" style="color:#7894A7;line-height:21px;background-color:white;" aria-hidden="true"></span>
-                        <div class="dropdown">
-                            
-                            <div id="dropdownmenu" class="dropdown-content">
-                                <a href="#help"><i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;Help</a>
-                                <hr />
-                                <a href="#support"><i class="fa fa-life-ring" aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
-                                <hr />
-                                <a href="/logout"><span class="fa fa-sign-out" aria-hidden="true"></span>&nbsp;&nbsp;LogOut</a>
-                                <hr />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<div class="container-fluid">
+		<div class="row" style="margin-bottom: 0px; background-color: white;">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+				<div class="logoArea" style="">
+					<img src="../img/logo-dark.png" class="img img-responsive"
+						height="30" />
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+				<div class="userArea pull-right" style="">
+					<div id="userDiv">
+						<img src="../img/default-user-avatar.jpg" height="30"
+							class="img img-circle" alt="user image" />&nbsp;&nbsp;<a
+							th:text="${userName}" 
+							sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span
+							class="fa fa-sort-desc dropbtn"
+							style="color: #7894A7; line-height: 21px; background-color: white;"
+							aria-hidden="true"></span>
+						<div class="dropdown">
 
-        <div class="row bgimage">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="bg-img-text">
-                    <span style=" font-size:60px;letter-spacing:1px;color:white;">Your data sync</span>
-                    <p style=" margin-top:10px; margin-bottom:10px;letter-spacing:1px;line-height:200%;">
-                       What insights will you uncover today? Click on your Apps below to find out:
-                    </p>
-                    
-                    <form method="post" action="app/intelligencesuite" id = "staticform" class = "userapps" >
-    				<button type="submit" class="btn btn-primary">Access Performance</button>
-					</form>     
-					<div th:each="app: ${apps}" class = "userapps"> 
-					<form method = "post" action = "@{app/}+${app.name}"  >
-					<button type = "submit" class = "btn btn-primary" th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></button>
+							<div id="dropdownmenu" class="dropdown-content">
+								<a href="#help"><i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;Help</a>
+								<hr />
+								<a href="#support"><i class="fa fa-life-ring"
+									aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
+								<hr />
+								<a href="/logout"><span class="fa fa-sign-out"
+									aria-hidden="true"></span>&nbsp;&nbsp;LogOut</a>
+								<hr />
+								<div sec:authorize="hasAuthority(#vars.adminGroups)">
+								<a th:href="@{/admin}"><i class="fa fa-life-ring"
+									aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row bgimage">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="bg-img-text">
+					<span style="font-size: 60px; letter-spacing: 1px; color: white;">Your
+						data sync</span>
+					<p
+						style="margin-top: 10px; margin-bottom: 10px; letter-spacing: 1px; line-height: 200%;">
+						What insights will you uncover today? Click on your Apps below to
+						find out:</p>
+
+					<form method="post" action="app/intelligencesuite" id="staticform"
+						class="userapps">
+						<button type="submit" class="btn btn-primary">Access
+							Performance</button>
 					</form>
-					</div>           
-                </div>
-            </div>
-        </div>
+					<div th:each="app: ${apps}" class="userapps">
+						<form method="post" action="@{app/}+${app.name}">
+							<button type="submit" class="btn btn-primary"
+								th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div class="row">
-            <div id="item-container" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 tab-item">
-                <a id="tabI1" href="#">
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
-                        <div class="row">
-                            <img src="../img/iconboxmarket.jpg" alt="market profiler." />
-                        </div>
-                        <div class="row">
-                            <h3> Market</h3>
-                            <span>Explore the data</span>
-                        </div>
-                    </div>
-                </a>
-                <a id="tabI2" href="#">
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
-                        <div class="row">
-                            <img src="../img/iconboxprovider.jpg" />
-                        </div>
-                        <div class="row">
-                            <h3>Provider</h3>
-                            <span>Organize Profilers</span>
-                        </div>
-                    </div>
-                </a>
-                <a id="tabI3" href="#">
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
-                        <div class="row">
-                            <img src="../img/iconboxperformance.jpg" />
-                        </div>
-                        <div class="row">
-                            <h3>Performance</h3>
-                            <span>Measure Results</span>
-                        </div>
-                    </div>
-                </a>
-                <a id="tabI4" href="#">
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
-                        <div class="row">
-                            <img src="../img/iconboxpopulation.jpg" />
-                        </div>
-                        <div class="row">
-                            <h3>Population</h3>
-                            <span>Compare data</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+		<div class="row">
+			<div id="item-container"
+				class="col-lg-12 col-md-12 col-sm-12 col-xs-12 tab-item">
+				<a id="tabI1" href="#">
+					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
+						<div class="row">
+							<img src="../img/iconboxmarket.jpg" alt="market profiler." />
+						</div>
+						<div class="row">
+							<h3>Market</h3>
+							<span>Explore the data</span>
+						</div>
+					</div>
+				</a> <a id="tabI2" href="#">
+					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
+						<div class="row">
+							<img src="../img/iconboxprovider.jpg" />
+						</div>
+						<div class="row">
+							<h3>Provider</h3>
+							<span>Organize Profilers</span>
+						</div>
+					</div>
+				</a> <a id="tabI3" href="#">
+					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
+						<div class="row">
+							<img src="../img/iconboxperformance.jpg" />
+						</div>
+						<div class="row">
+							<h3>Performance</h3>
+							<span>Measure Results</span>
+						</div>
+					</div>
+				</a> <a id="tabI4" href="#">
+					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 well tabItemDiv">
+						<div class="row">
+							<img src="../img/iconboxpopulation.jpg" />
+						</div>
+						<div class="row">
+							<h3>Population</h3>
+							<span>Compare data</span>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
 
-       <div class="row tab-panel" id="tabP1" style="padding-left:10%; padding-right:10%;text-align:justify;">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <img src="../img/img-market@2x.png" alt="charts images is here." class="img img-responsive" />
-            </div>
-            <div class="col-md-6">
-                <p>Research shows that data science is the key to unlocking an estimated $300 billion per year in savings within the healthcare industry.</p>
-                <p>Penalties from the Centers of Medicare &amp; Medicaid Service (CMS) accounts for a portion of where these savings can be achieved.</p>
-                <p>The account intelligence tool is designed to:</p>
-                <ul>
-                    <li>Access Key market insights</li>
-                    <li>Make targeted decisions in strategic Planning</li>
-                    <li>Identify trends in care</li>
-                    <li>View market share for high revenue conditions</li>
-                    <li>Benchmark more effectively</li>
-                </ul>
-                <h4>
-                    Access to this information will enable you to target resources and sales efforts towards accounts where you can make the greatest impact.
-                </h4>
-            </div>
-        </div>
-
-
-        <div class="row tab-panel" id="tabP2" style="padding-left:10%; padding-right:10%;text-align:justify;">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <img src="../img/img-provider@2x.png" alt="charts images is here." class="img img-responsive" />
-            </div>
-            <div class="col-md-6">
-                <p>Research shows that data science is the key to unlocking an estimated $300 billion per year in savings within the healthcare industry.</p>
-                <p>Penalties from the Centers of Medicare &amp; Medicaid Service (CMS) accounts for a portion of where these savings can be achieved.</p>
-                <p>The account intelligence tool is designed to:</p>
-                <ul>
-                    <li>Understand the Patient Journey</li>
-                    <li>Understand referral Patterns</li>
-                    <li>View Leakage from your facility</li>
-                    <li>Discover Opportunities to increase market share</li>
-                    <li>Identify Providers to invite to your network</li>
-                </ul>
-                <h4>
-                    Access to this information will enable you to target resources and sales efforts towards accounts where you can make the greatest impact.
-                </h4>
-            </div>
-        </div>
+		<div class="row tab-panel" id="tabP1"
+			style="padding-left: 10%; padding-right: 10%; text-align: justify;">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<img src="../img/img-market@2x.png" alt="charts images is here."
+					class="img img-responsive" />
+			</div>
+			<div class="col-md-6">
+				
+				<ul>
+					<li>Access Key market insights</li>
+					<li>Make targeted decisions in strategic Planning</li>
+					<li>Identify trends in care</li>
+					<li>View market share for high revenue conditions</li>
+					<li>Benchmark more effectively</li>
+				</ul>
+			
+			</div>
+		</div>
 
 
-        <div class="row tab-panel" id="tabP3" style="padding-left:10%; padding-right:10%;text-align:justify;">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <img src="../img/img-performance@2x.png" alt="charts images is here." class="img img-responsive" />
-            </div>
-            <div class="col-md-6">
-                <p>Research shows that data science is the key to unlocking an estimated $300 billion per year in savings within the healthcare industry.</p>
-                <p>Penalties from the Centers of Medicare &amp; Medicaid Service (CMS) accounts for a portion of where these savings can be achieved.</p>
-                <p>The account intelligence tool is designed to:</p>
-                <ul>
-                    <li>scrub throw your list of accounts to surface strategic sales opportunities.</li>
-                    <li>enable you to better understand health care initiatives that drive opportunities within your accounts</li>
-                    <li>and soon, provide connections to co-selling partners with Microsoft based solutions that solve those challenges.</li>
-                </ul>
-                <h4>
-                    Access to this information will enable you to target resources and sales efforts towards accounts where you can make the greatest impact.
-                </h4>
-            </div>
-        </div>
-        
-          <div class="row tab-panel" id="tabP4" style="padding-left:10%; padding-right:10%;text-align:justify;">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <img src="../img/img-population@2x.png" alt="charts images is here." class="img img-responsive" />
-            </div>
-            <div class="col-md-6">
-                <p>Research shows that data science is the key to unlocking an estimated $300 billion per year in savings within the healthcare industry.</p>
-                <p>Penalties from the Centers of Medicare &amp; Medicaid Service (CMS) accounts for a portion of where these savings can be achieved.</p>
-                <p>The account intelligence tool is designed to:</p>
-                <ul>
-                    <li>Identify Opportunities Among your Patient Population</li>
-                    <li>Monitor risk and impactability of your patients</li>
-                    <li>Find opportunities to reduce cost</li>
-                    <li>Track MIPS,Quality Measures &amp; Gaps in Care</li>
-                </ul>
-                <h4>
-                    Access to this information will enable you to target resources and sales efforts towards accounts where you can make the greatest impact.
-                </h4>
-            </div>
-        </div>
+		<div class="row tab-panel" id="tabP2"
+			style="padding-left: 10%; padding-right: 10%; text-align: justify;">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<img src="../img/img-provider@2x.png" alt="charts images is here."
+					class="img img-responsive" />
+			</div>
+			<div class="col-md-6">
+				<ul>
+					<li>Understand the Patient Journey</li>
+					<li>Understand referral Patterns</li>
+					<li>View Leakage from your facility</li>
+					<li>Discover Opportunities to increase market share</li>
+					<li>Identify Providers to invite to your network</li>
+				</ul>
+			
+			</div>
+		</div>
 
-        <div class="row" style="background-color:#F9FDFE;padding-bottom:5%;">
-            <div style="text-align:center;margin-top:5%;">
-                <h1>Questions? Look Here</h1>
-                <h4 style="color:#818181;">Can't find any answer? Email us at <a href="#">support@proskriptive.com</a> </h4>
-            </div>
-            <div style="margin-left:15%;margin-right:15%;">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 questiondiv">
-                    <div class="">
-                        <h4>When do the dashboards update?</h4>
-                        <p>
-                           Information shown in your dashboards will indicate a time stamp of the last update.Talk to your administrator if there is information that you need to view with a different update frequency.
-                        </p>
-                        <br />
-                    </div>
-                    <div>
-                        <h4>How do I access different reports?</h4>
-                        <p>
-                            Users can access reports based upon roles. If you need to view additional insights, contact your adminstrator for access.If you have a suggestion for how to improve an existing report,
-                            send us your idea to <a href="#">support@proskriptive.com</a>	 
-                           
-                        </p>
-                        <br />
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 questiondiv">
-      
-                    <div>
-                        <h4>Can I create new users?</h4>
-                        <p>
-                           System Administrators are able to add new users. Contact your administrator if you know of someone who needs access.
-                        </p>
-                        <br />
-                    </div>
-                    <div>
-                        <h4>What are the other apps?</h4>
-                        <p>
-                           Proskriptive offers a series of Apps that provide actionable information to support the multiple needs of healthcare organizations. 
-                           For additional information or to demo these apps, contact your System Administrator or email <a href = "#">info@proskriptive.com</a>.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="row" id="footer" style="height:50px;color:#818181; line-height:50px;">
-            <hr />
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <div style="margin-left:15%;">
-                    Copyrights &copy; 2017. All rights reserved.
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <div class="pull-right" style="margin-right:15%;">
-                    <span>Powered by <img src="../img/proskriptivepic.png" alt="footer image." height="30" /></span>
-                </div>
-            </div>
-        </div>
-    </div>
+		<div class="row tab-panel" id="tabP3"
+			style="padding-left: 10%; padding-right: 10%; text-align: justify;">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<img src="../img/img-performance@2x.png"
+					alt="charts images is here." class="img img-responsive" />
+			</div>
+			<div class="col-md-6">
+				<ul>
+					<li>scrub throw your list of accounts to surface strategic
+						sales opportunities.</li>
+					<li>enable you to better understand health care initiatives
+						that drive opportunities within your accounts</li>
+					<li>and soon, provide connections to co-selling partners with
+						Microsoft based solutions that solve those challenges.</li>
+				</ul>
+			
+			</div>
+		</div>
+
+		<div class="row tab-panel" id="tabP4"
+			style="padding-left: 10%; padding-right: 10%; text-align: justify;">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<img src="../img/img-population@2x.png" alt="charts images is here."
+					class="img img-responsive" />
+			</div>
+			<div class="col-md-6">
+				<ul>
+					<li>Identify Opportunities Among your Patient Population</li>
+					<li>Monitor risk and impactability of your patients</li>
+					<li>Find opportunities to reduce cost</li>
+					<li>Track MIPS,Quality Measures &amp; Gaps in Care</li>
+				</ul>
+				
+			</div>
+		</div>
+
+		<div class="row"
+			style="background-color: #F9FDFE; padding-bottom: 5%;">
+			<div style="text-align: center; margin-top: 5%;">
+				<h1>Questions? Look Here</h1>
+				<h4 style="color: #818181;">
+					Can't find any answer? Email us at <a href="#">support@proskriptive.com</a>
+				</h4>
+			</div>
+			<div style="margin-left: 15%; margin-right: 15%;">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 questiondiv">
+					<div class="">
+						<h4>When do the dashboards update?</h4>
+						<p>Information shown in your dashboards will indicate a time
+							stamp of the last update.Talk to your administrator if there is
+							information that you need to view with a different update
+							frequency.</p>
+						<br />
+					</div>
+					<div>
+						<h4>How do I access different reports?</h4>
+						<p>
+							Users can access reports based upon roles. If you need to view
+							additional insights, contact your adminstrator for access.If you
+							have a suggestion for how to improve an existing report, send us
+							your idea to <a href="#">support@proskriptive.com</a>
+
+						</p>
+						<br />
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 questiondiv">
+
+					<div>
+						<h4>Can I create new users?</h4>
+						<p>System Administrators are able to add new users. Contact
+							your administrator if you know of someone who needs access.</p>
+						<br />
+					</div>
+					<div>
+						<h4>What are the other apps?</h4>
+						<p>
+							Proskriptive offers a series of Apps that provide actionable
+							information to support the multiple needs of healthcare
+							organizations. For additional information or to demo these apps,
+							contact your System Administrator or email <a href="#">info@proskriptive.com</a>.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" id="footer"
+			style="height: 50px; color: #818181; line-height: 50px;">
+			<hr />
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+				<div style="margin-left: 15%;">Copyrights &copy; 2017. All
+					rights reserved.</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+				<div class="pull-right" style="margin-right: 15%;">
+					<span>Powered by <img src="../img/proskriptivepic.png"
+						alt="footer image." height="30" /></span>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
