@@ -443,6 +443,10 @@ body {
 .pull-right span {
 	color: #818181;
 }
+
+#userDiv {
+cursor: pointer;	
+}
 @media only screen and (min-width: 1200px) {
    .description-section{
     /* padding-left: 150px; */
@@ -492,6 +496,11 @@ a#user {
 }
 .userArea  a {
 	text-decoration:none;
+	cursor:pointer;
+}
+
+.userArea a:hover {
+	color: #337ab7;
 }
 
         .p-t-10 {
@@ -508,7 +517,6 @@ a#user {
             /*padding: 16px;*/
             font-size: 16px;
             border: none;
-            cursor: pointer;
             margin-top:2px;
         }
 
