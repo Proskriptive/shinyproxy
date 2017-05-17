@@ -7,11 +7,55 @@
 	<link
 		href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
 		th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
 	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
 		th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
+	<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+	
+	   <style>
+        body {
+            background-color: #ECEFF4;
+        }
+
+        .error {
+            margin-top: 10%;
+            margin-bottom: auto;
+            text-align:center;
+           
+        }
+
+        .error-text {
+            margin-top: 50px;
+            
+        }
+
+        .whooops {
+            color: #353535;
+            opacity: 1;
+            font-size: 46px;
+            font-family:'Lato', sans-serif;
+            letter-spacing: 1.6px;
+            line-height:55px;
+            font-weight:300;
+        }
+
+        h4 {
+            color: #717274;
+        }
+
+        h2 {
+            color: #6E6E70;
+            font-weight: 100 !important;
+        }
+    </style>
 </head>
 <body>
-	<div style="margin-top: 15px; margin-left: 15px;">
+   <div class = "container-fluid">
+	<div class = "row">
+	 <div class="col-sm-12 error" >
 		<h1>Error</h1>
 		<p>
 		    <b>Status code:</b> <span th:text="${error}"></span>
@@ -20,6 +64,17 @@
 		<p>
 			<b>Message:</b> <span th:text="${message}"></span>
 		</p>
+		  <img src="../img/error-image@2x.png" width="543" height="260" />
+		      <div class="error-text">
+                    <div class="whooops">Whooops!</div>
+                    <h4>Looks like something went wrong.</h4>
+                    <h4>
+                        Need extra help? Contact us at
+                        <a href="#">support@proskriptive.com</a>
+                    </h4>
+               </div>
+	 </div>
 	</div>
+   </div>
 </body>
 </html>
