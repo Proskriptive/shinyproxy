@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head lang="en">
@@ -7,14 +7,47 @@
 	<link
 		href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
 		th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
-	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet"/>
+	<link
+	href="https://cdn.jsdelivr.net/bootstrap-social/5.1.1/bootstrap-social.css"
+	type="text/css" rel="stylesheet" media="screen" />
+	<link
+	href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css"
+	type="text/css" rel="stylesheet" media="screen" />
 	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
 		th:src="@{/webjars/jquery/2.2.2/jquery.min.js}"></script>
 	<script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
-	
+	<link 
+	    th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
+	    media="screen"></link>
+		<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
+	$(document).ready(function(){
+		$('#userDiv').click(function(){ 			
+			//  $('.dropdown-toggle', this).trigger('click'); 
+			  document.getElementById("dropdownmenu").classList.toggle("show");
+			});		
+	});
+	 
+	window.onclick = function (event) {
+		debugger;
+	    if (!event.target.matches('.dropbtn')) {
+
+	        var dropdowns = document.getElementsByClassName("dropdown-content");
+	        var i;
+	        for (i = 0; i < dropdowns.length; i++) {
+	            var openDropdown = dropdowns[i];
+	            if (openDropdown.classList.contains('show')) {
+	                openDropdown.classList.remove('show');
+	            }
+	        }
+	    }
+	}
+	//]]>
+	</script>	
 	   <style>
         body {
             background-color: #ECEFF4;
@@ -49,21 +82,23 @@
         h2 {
             color: #6E6E70;
             font-weight: 100 !important;
-        }
+        } 
     </style>
 </head>
 <body>
+<!-- navigation bar -->
+	<div th:replace="../fragments/navbar :: navbar"></div>
    <div class = "container-fluid">
 	<div class = "row">
 	 <div class="col-sm-12 error" >
-		<h1>Error</h1>
-		<p>
-		    <b>Status code:</b> <span th:text="${error}"></span>
-			<b>Status code:</b> <span th:text="${status}"></span>
-		</p>
-		<p>
-			<b>Message:</b> <span th:text="${message}"></span>
-		</p>
+<!-- 		<h1>Error</h1> -->
+<!-- 		<p> -->
+<!-- 		    <b>Status code:</b> <span th:text="${error}"></span> -->
+<!-- 			<b>Status code:</b> <span th:text="${status}"></span> -->
+<!-- 		</p> -->
+<!-- 		<p> -->
+<!-- 			<b>Message:</b> <span th:text="${message}"></span> -->
+<!-- 		</p> -->
 		  <img src="../img/error-image@2x.png" width="543" height="260" />
 		      <div class="error-text">
                     <div class="whooops">Whooops!</div>
@@ -77,4 +112,4 @@
 	</div>
    </div>
 </body>
-</html>
+</html> 
