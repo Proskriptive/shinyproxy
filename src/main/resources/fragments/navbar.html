@@ -32,7 +32,7 @@
             <div class="col-md-10 col-sm-8 col-xl-6" style="color:white;background-color:#143755;height:50px;">
                 <div class="p-t-10 pull-right">
                 <div id = "userDiv">
-                    <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a id = "user" th:text="${userName}" sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a id = "user" th:text="${userName}" th:href="@{/admin}" sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;                    
                     <div class="dropdown">
                         <span id="dropdownlabel" style="background-color:#143755;color:white;" class="fa fa-sort-desc dropbtn" aria-hidden="true"></span>
                         <div id="dropdownmenu" class="dropdown-content">
