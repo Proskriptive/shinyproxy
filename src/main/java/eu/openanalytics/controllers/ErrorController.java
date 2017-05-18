@@ -26,8 +26,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.NestedServletException;
 
+import eu.openanalytics.services.UserService;
+
 @Controller
 public class ErrorController implements org.springframework.boot.autoconfigure.web.ErrorController {
+	
+	@Inject
+	UserService userService;
 	
 	@Inject
 	Environment environment;
@@ -38,6 +43,7 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
 		map.put("title", environment.getProperty("shiny.proxy.title"));
 		map.put("logo", environment.getProperty("shiny.proxy.logo-url"));
 		map.put("status", response.getStatus());
+		map.put("adminGroups", userService.getAdminRoles());
 		map.put("userName",userName);
 		
 		String message = "";

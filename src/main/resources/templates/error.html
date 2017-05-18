@@ -23,29 +23,45 @@
 	<link 
 	    th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	    media="screen"></link>
-		<script type="text/javascript" th:inline="javascript">
+	<script type="text/javascript" th:inline="javascript">
 	//<![CDATA[
 	$(document).ready(function(){
-		$('#userDiv').click(function(){ 			
+		$('#userDiv').click(function(){ 	
+			debugger;
 			//  $('.dropdown-toggle', this).trigger('click'); 
 			  document.getElementById("dropdownmenu").classList.toggle("show");
 			});		
-	});
-	 
-	window.onclick = function (event) {
-		debugger;
-	    if (!event.target.matches('.dropbtn')) {
+		$(document).click(function (e) {
+			
+		    e.stopPropagation();
+		    var container = $("#userDiv");
 
-	        var dropdowns = document.getElementsByClassName("dropdown-content");
-	        var i;
-	        for (i = 0; i < dropdowns.length; i++) {
-	            var openDropdown = dropdowns[i];
-	            if (openDropdown.classList.contains('show')) {
-	                openDropdown.classList.remove('show');
-	            }
-	        }
-	    }
-	}
+		    //check if the clicked area is dropDown or not
+
+		    if(!container["0"].id == e.target.id ){
+		    	$("#dropdownmenu").attr('class', 'dropdown-content');
+		    }
+		    if(e.target.offsetParent.firstElementChild.className == "p-t-10 pull-right") {
+		    	$("#dropdownmenu").attr('class', 'dropdown-content show');
+		    }
+		});
+	});
+
+	 
+// 	window.onclick = function (event) {
+// 		debugger;
+// 	    if (!event.target.matches('.dropbtn') || !event.target.matches('#userDiv') || !event.target.nextSibling.parentElement.id == "userDiv" ) {
+
+// 	        var dropdowns = document.getElementsByClassName("dropdown-content");
+// 	        var i;
+// 	        for (i = 0; i < dropdowns.length; i++) {
+// 	            var openDropdown = dropdowns[i];
+// 	            if (openDropdown.classList.contains('show')) {
+// 	                openDropdown.classList.remove('show');
+// 	            }
+// 	        }
+// 	    }
+// 	}
 	//]]>
 	</script>	
 	   <style>

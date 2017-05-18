@@ -18,7 +18,7 @@
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 	rel="stylesheet" />
-	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
+<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	media="screen"></link>
 
 
@@ -26,27 +26,27 @@
 	//<![CDATA[
 	$(function() {
 		$('#userDiv').click(function() {
+			debugger;
 			document.getElementById("dropdownmenu").classList.toggle("show");
 		});
-		window.onclick = function(event) {
 
-			if (!(event.target.offsetParent.firstElementChild.className == 'userArea pull-right')) {
-				var dropdowns = document
-						.getElementsByClassName("dropdown-content");
-				var i;
-				for (i = 0; i < dropdowns.length; i++) {
-					var openDropdown = dropdowns[i];
-					if (openDropdown.classList.contains('show')) {
-						openDropdown.classList.remove('show');
-					}
-				}
-			}
-		}
+		$(window).click(function(event) {
+			debugger;
+							if (!$(event.target.offsetParent.firstElementChild).hasClass('userArea pull-right')) {
+								var dropdowns = document.getElementsByClassName("dropdown-content");
+								var i;
+								for (i = 0; i < dropdowns.length; i++) {
+									var openDropdown = dropdowns[i];
+									if (openDropdown.classList.contains('show')) {
+										openDropdown.classList.remove('show');
+									}
+								}
+							}
+						});
 	});
 	//]]>
 </script>
 <script>
-	
 	$(function() {
 		$('#tabI3').find('.tabItemDiv').removeClass('well').addClass(
 				'well_tab-item');
@@ -181,23 +181,24 @@ p {
 li {
 	color: #818181;
 }
-   .tab-panel ul li::before {
-                content: "•";
-                font-size: 170%; /* or whatever */
-                padding-right: 5px;
-                color: #01538F; /* or whatever color you prefer */
-            }
 
+.tab-panel ul li::before {
+	content: "•";
+	font-size: 170%; /* or whatever */
+	padding-right: 5px;
+	color: #01538F; /* or whatever color you prefer */
+}
 
 hr {
 	margin: 0px;
 	padding: 0px;
 }
+
 #Intro-to-apps {
-font-size:37px;
-font-weight:300;
-padding-top:37px;
-padding-bottom:20px;
+	font-size: 37px;
+	font-weight: 300;
+	padding-top: 37px;
+	padding-bottom: 20px;
 }
 
 @media only screen and (min-device-width: 768px) {
@@ -263,15 +264,15 @@ padding-bottom:20px;
 					<div id="userDiv">
 						<img src="../img/default-user-avatar.jpg" height="30"
 							class="img img-circle" alt="user image" />&nbsp;&nbsp;<a
-							th:text="${userName}" 
+							th:text="${userName}"
 							sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span
 							class="fa fa-sort-desc dropbtn"
-							style="color:#95B6CE;line-height: 21px; background-color: white;"
+							style="color: #95B6CE; line-height: 21px; background-color: white;"
 							aria-hidden="true"></span>
 						<div class="dropdown">
 
 							<div id="dropdownmenu" class="dropdown-content">
-								<a href="#help"><i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;Help</a>
+
 								<hr />
 								<a href="#support"><i class="fa fa-life-ring"
 									aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
@@ -280,8 +281,8 @@ padding-bottom:20px;
 									aria-hidden="true"></span>&nbsp;&nbsp;LogOut</a>
 								<hr />
 								<div sec:authorize="hasAuthority(#vars.adminGroups)">
-								<a th:href="@{/admin}"><i class="fa fa-life-ring"
-									aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+									<a th:href="@{/admin}"><i class="fa fa-life-ring"
+										aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
 								</div>
 							</div>
 						</div>
@@ -297,12 +298,13 @@ padding-bottom:20px;
 						Data Sync</span>
 					<p
 						style="margin-top: 10px; margin-bottom: 10px; letter-spacing: 1px; line-height: 200%;">
-						What insights will you uncover today? <br/>Click on your Apps below to
-						find out:</p>
+						What insights will you uncover today? <br />Click on your Apps
+						below to find out:
+					</p>
 
 					<form method="post" action="app/intelligencesuite" id="staticform"
 						class="userapps">
-						<button type="submit" class="btn btn-primary">Access
+						<button type="submit" class="btn btn-primary">
 							Performance</button>
 					</form>
 					<div th:each="app: ${apps}" class="userapps">
@@ -316,55 +318,64 @@ padding-bottom:20px;
 		</div>
 
 		<div class="row">
-			<div id="item-container" style="padding-left:80px; padding-right:80px;"
+			<div id="item-container"
+				style="padding-left: 80px; padding-right: 80px;"
 				class="col-lg-12 col-md-12 col-sm-12 col-xs-12 tab-item">
-				<div id = "Intro-to-apps" class = "text-center">Learn More About Our Apps</div>
+				<div id="Intro-to-apps" class="text-center">Learn More About
+					Our Apps</div>
 				<a id="tabI1" href="#">
 					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-					<div class="well tabItemDiv">
-						<div class="row">
-							<img src="../img/iconboxmarket.jpg" alt="market profiler." />
-						</div>
-						<div class="row">
-							<h3>Market</h3>
-							<span>Discover Opportunities<br/> to  Gain Market Share</span>
-						</div>
+						<div class="well tabItemDiv">
+							<div class="row">
+								<img src="../img/iconboxmarket.jpg" alt="market profiler." />
+							</div>
+							<div class="row">
+								<h3>Market</h3>
+								<span>Discover Opportunities<br /> to Gain Market Share
+								</span>
+							</div>
 						</div>
 					</div>
 				</a> <a id="tabI2" href="#">
 					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-					<div class="well tabItemDiv">
-						<div class="row">
-							<img src="../img/iconboxprovider.jpg" />
+						<div class="well tabItemDiv">
+							<div class="row">
+								<img src="../img/iconboxprovider.jpg" />
+							</div>
+							<div class="row">
+								<h3>Provider</h3>
+								<span>Explore Care Provider Quality <br /> &amp;
+									Performance Variation
+								</span>
+							</div>
 						</div>
-						<div class="row">
-							<h3>Provider</h3>
-							<span>Explore Care Provider Quality <br/> &amp; Performance Variation</span>
-						</div>
-					</div>
 					</div>
 				</a> <a id="tabI3" href="#">
 					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-					<div class="well tabItemDiv">
-						<div class="row">
-							<img src="../img/iconboxperformance.jpg" />
-						</div>
-						<div class="row">
-							<h3>Performance</h3>
-							<span>Understand Causes of Outliers <br/> that Diminish Performance</span>
-						</div>
+						<div class="well tabItemDiv">
+							<div class="row">
+								<img src="../img/iconboxperformance.jpg" />
+							</div>
+							<div class="row">
+								<h3>Performance</h3>
+								<span>Understand Causes of Outliers <br /> that Diminish
+									Performance
+								</span>
+							</div>
 						</div>
 					</div>
 				</a> <a id="tabI4" href="#">
 					<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
-					<div class= "well tabItemDiv">
-						<div class="row">
-							<img src="../img/iconboxpopulation.jpg" />
-						</div>
-						<div class="row">
-							<h3>Population</h3>
-							<span>Risk Profile each patient to <br/> Identify Specific Care Needs</span>
-						</div>
+						<div class="well tabItemDiv">
+							<div class="row">
+								<img src="../img/iconboxpopulation.jpg" />
+							</div>
+							<div class="row">
+								<h3>Population</h3>
+								<span>Risk Profile each patient to <br /> Identify
+									Specific Care Needs
+								</span>
+							</div>
 						</div>
 					</div>
 				</a>
@@ -378,7 +389,7 @@ padding-bottom:20px;
 					class="img img-responsive" />
 			</div>
 			<div class="col-md-6">
-				
+
 				<ul>
 					<li>Access Key market insights</li>
 					<li>Make targeted decisions in strategic Planning</li>
@@ -386,7 +397,7 @@ padding-bottom:20px;
 					<li>View market share for high revenue conditions</li>
 					<li>Benchmark more effectively</li>
 				</ul>
-			
+
 			</div>
 		</div>
 
@@ -405,7 +416,7 @@ padding-bottom:20px;
 					<li>Discover Opportunities to increase market share</li>
 					<li>Identify Providers to invite to your network</li>
 				</ul>
-			
+
 			</div>
 		</div>
 
@@ -423,7 +434,7 @@ padding-bottom:20px;
 					<li>Empower Hospitalists with the tools to focus care</li>
 					<li>Enable operations $ utilization to better manage resources</li>
 				</ul>
-			
+
 			</div>
 		</div>
 
@@ -440,7 +451,7 @@ padding-bottom:20px;
 					<li>Find opportunities to reduce cost</li>
 					<li>Track MIPS,Quality Measures &amp; Gaps in Care</li>
 				</ul>
-				
+
 			</div>
 		</div>
 
@@ -507,7 +518,7 @@ padding-bottom:20px;
 					<span>Powered by <img src="../img/proskriptivepic.png"
 						alt="footer image." height="30" /></span>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>
