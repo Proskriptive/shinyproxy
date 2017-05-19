@@ -19,6 +19,7 @@ import java.security.Principal;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -38,13 +39,15 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
 	Environment environment;
 	
 	@RequestMapping("/error")
-	String handleError(ModelMap map, HttpServletRequest request, HttpServletResponse response, Principal principal) {
-		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
+	String handleError(ModelMap map, HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session =  request.getSession();
+		String userName = (String) session.getAttribute("userName");
 		map.put("title", environment.getProperty("shiny.proxy.title"));
 		map.put("logo", environment.getProperty("shiny.proxy.logo-url"));
 		map.put("status", response.getStatus());
 		map.put("adminGroups", userService.getAdminRoles());
 		map.put("userName",userName);
+		
 		
 		String message = "";
 		Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
