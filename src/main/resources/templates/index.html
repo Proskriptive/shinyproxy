@@ -25,13 +25,14 @@
 <script>
 	//<![CDATA[
 	$(function() {
+		
 		$('#userDiv').click(function() {
-			debugger;
+	
 			document.getElementById("dropdownmenu").classList.toggle("show");
 		});
 
 		$(window).click(function(event) {
-			debugger;
+
 							if (!$(event.target.offsetParent.firstElementChild).hasClass('userArea pull-right')) {
 								var dropdowns = document.getElementsByClassName("dropdown-content");
 								var i;
@@ -244,8 +245,7 @@ hr {
 		margin-right: 0%;
 		margin-top: 7px;
 	}
-	.bg-img-text span {
-		
+	.bg-img-text span {	
 	}
 }
 </style>
@@ -272,18 +272,16 @@ hr {
 						<div class="dropdown">
 
 							<div id="dropdownmenu" class="dropdown-content">
-
+                               <div sec:authorize="hasAuthority(#vars.adminGroups)">
+									<a th:href="@{/admin}"><i class="fa fa-life-ring"
+										aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+								</div>
 								<hr />
 								<a href="#support"><i class="fa fa-life-ring"
 									aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
 								<hr />
 								<a href="/logout"><span class="fa fa-sign-out"
 									aria-hidden="true"></span>&nbsp;&nbsp;LogOut</a>
-								<hr />
-								<div sec:authorize="hasAuthority(#vars.adminGroups)">
-									<a th:href="@{/admin}"><i class="fa fa-life-ring"
-										aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
-								</div>
 							</div>
 						</div>
 					</div>

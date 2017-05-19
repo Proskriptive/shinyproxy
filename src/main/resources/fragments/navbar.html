@@ -18,6 +18,38 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	media="screen"></link>
+	
+	<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
+	$(document).ready(function(){
+		$('#userDiv').click(function(){ 			
+			//  $('.dropdown-toggle', this).trigger('click'); 
+			  document.getElementById("dropdownmenu").classList.toggle("show");
+			});	
+		
+		$('.p-t-10').click(function(){ 			
+			//  $('.dropdown-toggle', this).trigger('click'); 
+			  document.getElementById("dropdownmenu").classList.toggle("show");
+			});	
+	});
+	 
+	window.onclick = function (event) {
+		if (!$(event.target.offsetParent.firstElementChild).hasClass('p-t-10')) {
+
+	        var dropdowns = document.getElementsByClassName("dropdown-content");
+	        var i;
+	        for (i = 0; i < dropdowns.length; i++) {
+	            var openDropdown = dropdowns[i];
+	            if (openDropdown.classList.contains('show')) {
+	                openDropdown.classList.remove('show');
+	            }
+	        }
+	    }
+	}
+	//]]>
+	</script>	
+	
+	
 </head>
 <body>
 	<div th:fragment="navbar" th:if="${@environment.getProperty('shiny.proxy.hide-navbar') != 'true'}" style="margin-bottom: 50px;">
@@ -32,11 +64,14 @@
             <div class="col-md-10 col-sm-8 col-xl-6" style="color:white;background-color:#143755;height:50px;">
                 <div class="p-t-10 pull-right">
                 <div id = "userDiv">
-                                        <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a id = "user" th:text="${userName}" th:href="@{/admin}" sec:authorize="hasAnyRole(#vars.adminGroups)"></a>&nbsp;&nbsp;&nbsp;&nbsp;                    
+                                        <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a id = "user" th:text="${userName}"></a>&nbsp;&nbsp;&nbsp;&nbsp;                    
                     <div class="dropdown">
                         <span id="dropdownlabel" style="background-color:#143755;color:white;" class="fa fa-sort-desc dropbtn" aria-hidden="true"></span>
                         <div id="dropdownmenu" class="dropdown-content">
-                           
+                           <div sec:authorize="hasAuthority(#vars.adminGroups)">
+									<a th:href="@{/admin}"><i class="fa fa-life-ring"
+										aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+								</div>
                             <hr />
                             <a href="#support"><i class="fa fa-life-ring" aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
                             <hr />

@@ -17,30 +17,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	media="screen"></link>
-	<script type="text/javascript" th:inline="javascript">
-	//<![CDATA[
-	$(document).ready(function(){
-		$('#userDiv').click(function(){ 			
-			//  $('.dropdown-toggle', this).trigger('click'); 
-			  document.getElementById("dropdownmenu").classList.toggle("show");
-			});		
-	});
-	 
-	window.onclick = function (event) {
-	    if (!event.target.matches('.dropbtn')) {
-
-	        var dropdowns = document.getElementsByClassName("dropdown-content");
-	        var i;
-	        for (i = 0; i < dropdowns.length; i++) {
-	            var openDropdown = dropdowns[i];
-	            if (openDropdown.classList.contains('show')) {
-	                openDropdown.classList.remove('show');
-	            }
-	        }
-	    }
-	}
-	//]]>
-	</script>	
+	
 </head>
 <body>
 	<!-- navigation bar -->
@@ -64,5 +41,34 @@
 		};
 		heartbeat();			
 	</script>
+	
+	
+	<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
+	$(document).ready(function(){
+		$('#userDiv').click(function(){ 	
+			debugger;
+			//  $('.dropdown-toggle', this).trigger('click'); 
+			  document.getElementById("dropdownmenu").classList.toggle("show");
+			});		
+		$(document).click(function (e) {
+			
+		    e.stopPropagation();
+		    var container = $("#userDiv");
+
+		    //check if the clicked area is dropDown or not
+
+		    if(!container["0"].id == e.target.id ){
+		    	$("#dropdownmenu").attr('class', 'dropdown-content');
+		    }
+		    if(e.target.offsetParent.firstElementChild.className == "p-t-10 pull-right") {
+		    	$("#dropdownmenu").attr('class', 'dropdown-content show');
+		    }
+		});
+	});
+	//]]>
+	</script>	
+	
+	
 </body>
 </html>
