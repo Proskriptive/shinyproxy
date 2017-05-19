@@ -25,7 +25,7 @@
 	
 	<!-- content -->
     <iframe id="shinyframe" th:src="${container}" width="100%"></iframe>
-	<script type="text/javascript" th:inline="javascript"> 
+	<script type="text/javascript" > 
 		function setShinyframeHeight() {
 	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
 	    }
@@ -43,7 +43,7 @@
 	</script>
 	
 	
-	<script type="text/javascript" th:inline="javascript">
+	<script type="text/javascript">
 	//<![CDATA[
 	$(document).ready(function(){
 		$('#userDiv').click(function(){ 	
