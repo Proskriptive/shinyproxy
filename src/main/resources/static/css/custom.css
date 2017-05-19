@@ -100,18 +100,14 @@ margin-top: 0;
 
 
 .bgimage {
-	background-image: url(../img/bg.jpg);
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	padding: 0px;
-	color: white;
+	
 }
 
 .bgimage h2 {
 	color: white;
 }
 
-.bgimage p {
+.bg-img-text p {
 	color: white;
 }
 
@@ -125,6 +121,8 @@ margin-top: 0;
 .bg-img-text span {
 	font-weight: 300;
 }
+
+
 	
 	.logoimg
 	{
