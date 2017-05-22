@@ -48,7 +48,7 @@
 	<div th:replace="../fragments/navbar :: navbar"></div>
 	
 	<!-- content -->
-    <iframe id="shinyframe" th:src="${container}" width="100%"></iframe>
+    <iframe id="shinyframe" th:src="${container}" width="100%" height = "739"></iframe>
 	<script type="text/javascript" > 
 		function setShinyframeHeight() {
 	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
