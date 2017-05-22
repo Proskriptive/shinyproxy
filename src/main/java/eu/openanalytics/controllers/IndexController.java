@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
 
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
@@ -45,10 +45,8 @@ public class IndexController {
 
 	@RequestMapping("/")
     String index(ModelMap map, Principal principal, HttpServletRequest request) {
-		HttpSession session =  request.getSession();
 		
 		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
-		session.setAttribute("userName", userName);
 		List<ShinyApp> apps = userService.getAccessibleApps((Authentication) principal);
 		boolean displayAppLogos = false;
 		for (ShinyApp app: apps) {
