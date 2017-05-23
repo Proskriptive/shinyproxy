@@ -277,7 +277,7 @@ hr {
 										aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
 								</div>
 								<hr />
-								<a href="#support"><i class="fa fa-life-ring"
+								<a href="mailto:support@proskriptive.com?subject=Support Request"><i class="fa fa-life-ring"
 									aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
 								<hr />
 								<a href="/logout"><span class="fa fa-sign-out"
@@ -310,7 +310,7 @@ hr {
 							Performance</button>
 					</form>
 					<div th:each="app: ${apps}" class="userapps">
-						<form method="post" action="@{app/}+${app.name}">
+						<form method="post" th:action="@{app/}+${app.name}">
 							<button type="submit" class="btn btn-primary"
 								th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></button>
 						</form>
