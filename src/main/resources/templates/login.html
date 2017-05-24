@@ -121,6 +121,30 @@ body {
 margin-top:0;
 }
 
+@media only screen and (min-device-width: 400px) and (max-device-width: 736px) and (orientation:portrait) {
+      .bgImage{
+      height:800px;
+      }
+    }
+    
+    
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation:portrait) {
+      .bgImage{
+      height:800px;
+      }
+    }
+      @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation:landscape) {
+      .bgImage{
+      height:800px;
+      }
+    }
+
+
+@media only screen and (min-device-width: 300px) and (max-device-width: 399px) and (orientation:portrait) {
+      .bgImage{
+      height:800px;
+      }
+    }
 
 </style>
 
@@ -130,7 +154,7 @@ margin-top:0;
 	<!-- content -->
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-6 col-sm-6 p-0" >
+			<div class="col-md-6 col-sm-12 col-xs-12 p-0" >
              <div class = "bgImage">         				
 				<div class="row">
 				<div class="col-md-12 divImageSpane">
@@ -140,7 +164,7 @@ margin-top:0;
 				</div>
 			 </div>
 			</div>
-			<div class="col-md-6 col-sm-6">
+			<div class="col-md-6 col-sm-12 col-xs-12">
 				<div class = "m-top">
 					<form action="login" method="POST" id="piform">
 						
