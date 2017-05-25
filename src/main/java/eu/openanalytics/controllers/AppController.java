@@ -15,12 +15,14 @@
  */
 package eu.openanalytics.controllers;
 
+
 import java.security.Principal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -47,7 +49,9 @@ public class AppController {
 	Environment environment;
 
 	@RequestMapping("/app/*")
-	String app(ModelMap map, Principal principal, HttpServletRequest request) {
+	String app(ModelMap map, Principal principal, HttpServletRequest request)  {
+		HttpSession session = request.getSession();
+		session.setMaxInactiveInterval(6*60);
 		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
 		Matcher matcher = Pattern.compile(".*/app/(.*)").matcher(request.getRequestURI());
 		String appName = matcher.matches() ? matcher.group(1) : null;
