@@ -51,7 +51,7 @@ public class AppController {
 	@RequestMapping("/app/*")
 	String app(ModelMap map, Principal principal, HttpServletRequest request)  {
 		HttpSession session = request.getSession();
-		session.setMaxInactiveInterval(6*60);
+		request.getSession().setMaxInactiveInterval(6*60);
 		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
 		Matcher matcher = Pattern.compile(".*/app/(.*)").matcher(request.getRequestURI());
 		String appName = matcher.matches() ? matcher.group(1) : null;
