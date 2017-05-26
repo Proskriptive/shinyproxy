@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head lang = "en">
+<head lang="en">
 <link
 	href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
 	th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
@@ -12,21 +12,30 @@
 <link
 	href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css"
 	type="text/css" rel="stylesheet" media="screen" />
-	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
+<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.2/jquery.min.js"
 	th:src="@{/webjars/jquery/2.2.2/jquery.min.js}" type="text/javascript"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	media="screen"></link>
-	<script>
-    setTimeout(function(){
-       window.location='/';
-    }, 360000);
-   </script>
-    <script type="text/javascript">
+<script type="text/javascript">
     //<![CDATA[
+    	 var IDLE_TIMEOUT = 360;
+		 var _idleSecondsCounter = 0;
     $(document).ready(function(){
+    	document.onclick = function() {
+		    _idleSecondsCounter = 0;
+		};
+		document.onmousemove = function() {
+		    _idleSecondsCounter = 0;
+		};
+		document.onkeypress = function() {
+		    _idleSecondsCounter = 0;
+		};
+		window.setInterval(CheckIdleTime, 1000);
         $('#userDiv').click(function(){     
-            debugger;
             //  $('.dropdown-toggle', this).trigger('click'); 
               document.getElementById("dropdownmenu").classList.toggle("show");
             });        
@@ -45,18 +54,26 @@
             }
         });
     });
+	function CheckIdleTime() {
+
+	    _idleSecondsCounter++;
+	    if (_idleSecondsCounter >= IDLE_TIMEOUT) {
+	        document.location.href = "/";
+	    }
+	}
     //]]>
-    </script>    
+    </script>
 
 </head>
 
 <body>
 	<!-- navigation bar -->
 	<div th:replace="../fragments/navbar :: navbar"></div>
-	
+
 	<!-- content -->
-    <iframe id="shinyframe" th:src="${container}" width="100%" style = "height:100vh;"></iframe>
-	<script type="text/javascript" > 
+	<iframe id="shinyframe" th:src="${container}" width="100%"
+		style="height: 100vh;"></iframe>
+	<script type="text/javascript"> 
 		function setShinyframeHeight() {
 	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
 	    }
@@ -72,8 +89,8 @@
 		};
 		heartbeat();			
 	</script>
-	
-	
-	
+
+
+
 </body>
 </html>

@@ -35,11 +35,11 @@
 <script>
 $(document).ready(function () {
 	 $('.sidemenu > a').click(function () {
-        debugger;
+        
         var clickedEle = $(this);
         var clickedEleValue = $(this).text();
         $('.sidemenu > a').each(function () {
-            debugger;
+            
             var val = $(this).text();
             if (clickedEleValue == val) {
                 if (!$(this).hasClass('active'))
@@ -68,7 +68,7 @@ function divprint() {
     $('#lblPrintButton').css('display', 'block');
 }
 function dropdownmenuFunction() {
-    debugger;
+   
     document.getElementById("dropdownmenu").classList.toggle("show");
 }
 </script>
