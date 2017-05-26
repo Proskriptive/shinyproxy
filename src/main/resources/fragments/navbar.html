@@ -24,32 +24,43 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
            <div class="row">
-            <div class="col-md-2 col-sm-4 col-xl-6" style="background:#12314D;height:50px">
-                <div style="padding:3% 0% 0% 0%;margin-top:5px;">
+            <div class="col-md-6 col-sm-6 col-xs-6" style="background:#12314D;height:50px">
+                <div style="margin-top:10px;line-height:25px;">
                     <a href="/"><img src="../img/logo-light.png" class="img img-responsive" /></a>
                 </div>
             </div>
-            <div class="col-md-10 col-sm-8 col-xl-6" style="color:white;background-color:#143755;height:50px;">
-                <div class="p-t-10 pull-right">
-                <div id = "userDiv">
-                                      <img src="../img/default-user-avatar.jpg" height="30" class="img img-circle" alt="user image" />&nbsp;&nbsp;<a id = "user" th:text="${userName}"></a>&nbsp;&nbsp;&nbsp;&nbsp;                    
-                    
-                    
-                    <div class="dropdown">
-                        <span id="dropdownlabel" style="background-color:#143755;color:white;" class="fa fa-sort-desc dropbtn" aria-hidden="true"></span>
-                        <div id="dropdownmenu" class="dropdown-content">
-                            <div sec:authorize="hasAuthority(#vars.adminGroups)">
-                                    <a th:href="@{/admin}"><i class="fa fa-life-ring"
-                                        aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
-                            </div>
-                            <hr />
-                            <a href="mailto:support@proskriptive.com?subject=Support Request"><i class="fa fa-life-ring" aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
-                            <hr />
-                            <a href="/logout"><span class="fa fa-sign-out" aria-hidden="true"></span>&nbsp;&nbsp;LogOut</a>
-                            <hr />
-                        </div>
-                    </div>
-                    </div>
+            <div class="col-md-6 col-sm-6 col-xs-6" style="color:white;background-color:#143755;height:50px;">
+              
+                <div class="userArea pull-right" style="">
+					<div class="dropdown">
+      <a class="dropdown-toggle" id="ddAction" style="background-color:#143755;" data-toggle="dropdown" href="#">
+       <img src="../img/default-user-avatar.jpg" height="30"
+							class="img img-circle" alt="user image" />&nbsp;&nbsp;<span style="color:#7B8BB7;background-color:#143755;"
+							th:text="${userName}"
+							sec:authorize="hasAnyRole(#vars.adminGroups)"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span
+							class="fa fa-sort-desc dropbtn"
+							style="color: #95B6CE; line-height: 21px; background-color: #143755;"
+							aria-hidden="true"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="ddaction">
+      <li role="presentation">
+         <div sec:authorize="hasAuthority(#vars.adminGroups)">
+									<a th:href="@{/admin}"><i class="fa fa-life-ring"
+										aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+								</div>
+								<hr />
+      </li>
+       <li role="presentation">
+       <a href="mailto:support@proskriptive.com?subject=Support Request"><i class="fa fa-life-ring" aria-hidden="true"></i>&nbsp;&nbsp;Support</a>
+											<hr />
+      </li>
+       <li role="presentation">
+      <a href="/logout"><span class="fa fa-sign-out" aria-hidden="true"></span>&nbsp;&nbsp;LogOut</a>
+											<hr />
+      </li>
+    </ul>
+
+				</div>
                 </div>
             </div>
         </div>

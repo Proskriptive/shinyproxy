@@ -23,31 +23,7 @@
 	<link 
 	    th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	    media="screen"></link>
-	<script type="text/javascript" th:inline="javascript">
-	//<![CDATA[
-	$(document).ready(function(){
-		$('#userDiv').click(function(){ 	
-			debugger;
-			//  $('.dropdown-toggle', this).trigger('click'); 
-			  document.getElementById("dropdownmenu").classList.toggle("show");
-			});		
-		$(document).click(function (e) {
-			
-		    e.stopPropagation();
-		    var container = $("#userDiv");
-
-		    //check if the clicked area is dropDown or not
-
-		    if(!container["0"].id == e.target.id ){
-		    	$("#dropdownmenu").attr('class', 'dropdown-content');
-		    }
-		    if(e.target.offsetParent.firstElementChild.className == "p-t-10 pull-right") {
-		    	$("#dropdownmenu").attr('class', 'dropdown-content show');
-		    }
-		});
-	});
-	//]]>
-	</script>	
+	
 	   <style>
         body {
             background-color: #ECEFF4;
@@ -83,6 +59,9 @@
             color: #6E6E70;
             font-weight: 100 !important;
         } 
+        
+        	
+
     </style>
 </head>
 <body>
@@ -105,7 +84,7 @@
                     <h4>Looks like something went wrong.</h4>
                     <h4>
                         Need extra help? Contact us at
-                        <a href="mailto:support@proskriptive.com?subject=Support Request">support@proskriptive.com</a>
+                        <a href="#">support@proskriptive.com</a>
                     </h4>
                </div>
 	 </div>
