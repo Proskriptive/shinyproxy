@@ -483,7 +483,7 @@ cursor: pointer;
 input[type="text"], input[type="password"], textarea, select { 
     outline: none;
 }
-:focus { background-color: #fff; }
+/* :focus { background-color: #fff; } */
 #login {
 	background-color: #91B4CE;
 	border-style:none;
@@ -498,7 +498,7 @@ a#user {
 }
 
 .userArea {
-	margin-right: 25%;
+/* 	margin-right: 25%; */
 	margin-top: 7px;
 }
 .userArea  a {

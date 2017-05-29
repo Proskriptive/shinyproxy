@@ -22,31 +22,7 @@
 	media="screen"></link>
 
 
-<script>
-	//<![CDATA[
-	$(function() {
-		
-		$('#userDiv').click(function() {
-	
-			document.getElementById("dropdownmenu").classList.toggle("show");
-		});
 
-		$(window).click(function(event) {
-
-							if (!$(event.target.offsetParent.firstElementChild).hasClass('userArea pull-right')) {
-								var dropdowns = document.getElementsByClassName("dropdown-content");
-								var i;
-								for (i = 0; i < dropdowns.length; i++) {
-									var openDropdown = dropdowns[i];
-									if (openDropdown.classList.contains('show')) {
-										openDropdown.classList.remove('show');
-									}
-								}
-							}
-						});
-	});
-	//]]>
-</script>
 <script>
 	$(function() {
 		$('#tabI3').find('.tabItemDiv').removeClass('well').addClass(
