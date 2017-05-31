@@ -498,7 +498,7 @@ a#user {
 }
 
 .userArea {
- 	margin-right: 25%; 
+	margin-right: 25%;  
 	margin-top: 7px;
 }
 .userArea  a {
@@ -534,8 +534,8 @@ a#user {
         .dropdown {
             float: right;
             position: relative;
-            display: inline-block;
-            left:101px;
+            display: inline-block;  
+            left:104px;         
         }
 
 
