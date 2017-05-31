@@ -61,8 +61,49 @@
 	        document.location.href = "/";
 	    }
 	}
+	
+	 $(function () { 
+         $body = $("body");
+         $('#shinyframe').load(function () {
+             $body.removeClass("loading");
+         });
+
+         $('#shinyframe').ready(function () {
+         $body.addClass("loading");
+         });
+       
+     });
+	
+	
+	
     //]]>
     </script>
+
+
+<style>
+  .progress-icon {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url(../img/default.gif) 
+                50% 50% 
+                no-repeat;
+
+}
+
+body.loading {
+    overflow: hidden;   
+}
+
+body.loading .progress-icon {
+    display: block;
+}
+</style>
 
 </head>
 
@@ -91,6 +132,6 @@
 	</script>
 
 
-
+ <div class="progress-icon"></div>
 </body>
 </html>
