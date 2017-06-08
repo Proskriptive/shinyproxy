@@ -31,6 +31,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import eu.openanalytics.services.AppService.ShinyApp;
+import eu.openanalytics.services.DockerService;
 import eu.openanalytics.services.UserService;
  
 /**
@@ -44,11 +45,15 @@ public class IndexController {
 	
 	@Inject
 	Environment environment;
-
+	
+	@Inject
+	DockerService dockerService;
 	@RequestMapping("/")
     String index(ModelMap map, Principal principal, HttpServletRequest request) {
         HttpSession session =  request.getSession();
-
+        if(dockerService != null){
+        	dockerService.shutdown();
+        }
 		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
         session.setAttribute("userName", userName);
 		List<ShinyApp> apps = userService.getAccessibleApps((Authentication) principal);
