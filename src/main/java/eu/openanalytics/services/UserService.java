@@ -101,7 +101,7 @@ public class UserService implements ApplicationListener<AbstractAuthenticationEv
 			heartbeatTimestamps.remove(key);
 		}
 		dockerService.releaseProxies(userName);
-		dockerService.shutdown();
+		//dockerService.shutdown();
 		log.info(String.format("User logged out [user: %s]", userName));
 		eventService.post(EventType.Logout.toString(), userName, null);
 	}
