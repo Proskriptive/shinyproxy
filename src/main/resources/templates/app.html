@@ -22,46 +22,26 @@
 	media="screen"></link>
 <script type="text/javascript">
     //<![CDATA[
-    	 var IDLE_TIMEOUT = [[${heartbeatTimeout}]] / 1000;
-		 var _idleSecondsCounter = 0;
-    $(document).ready(function(){
-    	document.onclick = function() {
-		    _idleSecondsCounter = 0;
-		};
-		document.onmousemove = function() {
-		    _idleSecondsCounter = 0;
-		};
-		document.onkeypress = function() {
-		    _idleSecondsCounter = 0;
-		};
-		window.setInterval(CheckIdleTime, 1000);
-        $('#userDiv').click(function(){     
-            //  $('.dropdown-toggle', this).trigger('click'); 
-              document.getElementById("dropdownmenu").classList.toggle("show");
-            });        
-        $(document).click(function (e) {
-            
-            e.stopPropagation();
-            var container = $("#userDiv");
+    	 $(document).ready(function(){
+    		 $('#userDiv').click(function(){     
+    	            //  $('.dropdown-toggle', this).trigger('click'); 
+    	              document.getElementById("dropdownmenu").classList.toggle("show");
+    	            });
+    		 $(document).click(function (e) {
+    	            
+    	            e.stopPropagation();
+    	            var container = $("#userDiv");
 
-            //check if the clicked area is dropDown or not
+    	            //check if the clicked area is dropDown or not
 
-            if(!container["0"].id == e.target.id ){
-                $("#dropdownmenu").attr('class', 'dropdown-content');
-            }
-            if(e.target.offsetParent.firstElementChild.className == "p-t-10 pull-right") {
-                $("#dropdownmenu").attr('class', 'dropdown-content show');
-            }
-        });
-    });
-	function CheckIdleTime() {
-
-	    _idleSecondsCounter++;
-	    if (_idleSecondsCounter >= IDLE_TIMEOUT) {
-	        document.location.href = "/";
-	    }
-	}
-	
+    	            if(!container["0"].id == e.target.id ){
+    	                $("#dropdownmenu").attr('class', 'dropdown-content');
+    	            }
+    	            if(e.target.offsetParent.firstElementChild.className == "p-t-10 pull-right") {
+    	                $("#dropdownmenu").attr('class', 'dropdown-content show');
+    	            }
+    	        });
+    	 });
 	 $(function () { 
          $body = $("body");
          $('#shinyframe').load(function () {
@@ -73,8 +53,6 @@
          });
        
      });
-	
-	
 	
     //]]>
     </script>
