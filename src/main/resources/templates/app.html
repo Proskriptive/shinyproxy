@@ -22,23 +22,7 @@
 	media="screen"></link>
 <script type="text/javascript">
     //<![CDATA[
-      	 var IDLE_TIMEOUT = 60;
-		 var _idleSecondsCounter = 0;
-    $(document).ready(function(){
-    	document.onclick = function() {
-		    _idleSecondsCounter = 0;
-		};
-		document.onmousemove = function() {
-		    _idleSecondsCounter = 0;
-		};
-		document.onkeypress = function() {
-		    _idleSecondsCounter = 0;
-		};
-		window.setInterval(CheckIdleTime, 1000);
-        $('#userDiv').click(function(){     
-            //  $('.dropdown-toggle', this).trigger('click'); 
-              document.getElementById("dropdownmenu").classList.toggle("show");
-            });        
+          
         $(document).click(function (e) {
             
             e.stopPropagation();
@@ -54,13 +38,7 @@
             }
         });
     });
-	function CheckIdleTime() {
 
-	    _idleSecondsCounter++;
-	    if (_idleSecondsCounter >= IDLE_TIMEOUT) {
-	        document.location.href = "/";
-	    }
-	}
 	
 	 $(function () { 
          $body = $("body");
