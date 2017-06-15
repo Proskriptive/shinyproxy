@@ -18,6 +18,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-idletimer/1.0.0/idle-timer.min.js"></script>
 <link th:href="@{/css/custom.css}" type="text/css" rel="stylesheet"
 	media="screen"></link>
 <script type="text/javascript">
@@ -43,6 +44,10 @@
     	        });
     	 });
 	 $(function () { 
+		 $( document ).on( "idle.idleTimer", function(event, elem, obj){
+	            document.location.href = "/";
+		    });
+		 $.idleTimer(10000);
          $body = $("body");
          $('#shinyframe').load(function () {
              $body.removeClass("loading");
