@@ -22,7 +22,13 @@
 	media="screen"></link>
 <script type="text/javascript">
     //<![CDATA[
-          
+        
+    	$(document).ready(function(){
+             $('#userDiv').click(function(){     
+                    //  $('.dropdown-toggle', this).trigger('click'); 
+                      document.getElementById("dropdownmenu").classList.toggle("show");
+                    });
+
         $(document).click(function (e) {
             
             e.stopPropagation();
