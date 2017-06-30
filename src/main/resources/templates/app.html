@@ -111,7 +111,7 @@ body.loading .progress-icon {
 		        $.ajax("/heartbeat" + window.location.pathname).success(function(data) {
 		        	heartbeat();
 		        });
-		    }, [[${heartbeatRate}]]);
+		    }, ${heartbeatRate});
 		};
 		heartbeat();			
 	</script>
