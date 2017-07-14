@@ -93,12 +93,13 @@ body.loading .progress-icon {
 </head>
 
 <body>
+	<span th:text="${heartbeatRate}" id="heartbeatRate" style="display:none"> </span> 
 	<!-- navigation bar -->
 	<div th:replace="../fragments/navbar :: navbar"></div>
 
 	<!-- content -->
 	<iframe id="shinyframe" th:src="${container}" width="100%"
-		style="height: 100vh;"></iframe>
+		style="height: 100vh;position: absolute;top: 0;padding-top: 50px;"></iframe>
 	<script type="text/javascript"> 
 		function setShinyframeHeight() {
 	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
@@ -111,7 +112,7 @@ body.loading .progress-icon {
 		        $.ajax("/heartbeat" + window.location.pathname).success(function(data) {
 		        	heartbeat();
 		        });
-		    }, ${heartbeatRate});
+		    }, $('#heartbeatRate').text());
 		};
 		heartbeat();			
 	</script>
