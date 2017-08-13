@@ -1,0 +1,10 @@
+language: java
+sudo: false
+cache:
+  directories:
+  - "$HOME/.cache"
+deploy:
+  provider: script
+  script: deploy.sh DEPLOY_DEV_HOST
+  on:
+    branch: master
