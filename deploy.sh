@@ -8,7 +8,7 @@ base64 -d > "$keyfile" <<< "$DEPLOY_BASE64_SSH_KEY"
 
 ssh "${!1}" -i "$keyfile" -o SendEnv=TRAVIS_COMMIT -o StrictHostKeyChecking=no <<'EOF'
 
-set -eux
+set -eu
 
 cd shinyproxy
 
