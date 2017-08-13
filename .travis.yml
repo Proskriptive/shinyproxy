@@ -5,6 +5,6 @@ cache:
   - "$HOME/.cache"
 deploy:
   provider: script
-  script: deploy.sh DEPLOY_DEV_HOST
+  script: ./deploy.sh DEPLOY_DEV_HOST
   on:
     branch: master
