@@ -45,7 +45,7 @@ public class LogoutHandler implements LogoutSuccessHandler {
 			if (userName != null) userService.logout(userName);
 		}*/
 		userService.logout("psingh");
-		//response.sendRedirect("/");
+		response.sendRedirect("/");
 	}
 	
 }
