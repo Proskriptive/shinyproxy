@@ -46,7 +46,7 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
 		map.put("title", environment.getProperty("shiny.proxy.title"));
 		map.put("logo", environment.getProperty("shiny.proxy.logo-url"));
 		map.put("status", response.getStatus());
-		map.put("adminGroups", userService.getAdminRoles());
+		map.put("adminGroups", userService.getAdminGroups());
 		map.put("userName",userName);
 		
 		

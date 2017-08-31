@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.stream.Collectors;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -84,6 +86,9 @@ public class DockerService {
 	
 	@Inject
 	AppService appService;
+	
+	@Inject
+	UserService userService;
 	
 	@Inject
 	EventService eventService;
@@ -382,6 +387,9 @@ public class DockerService {
 	private List<String> buildEnv(String userName, ShinyApp app) throws IOException {
 		List<String> env = new ArrayList<>();
 		env.add(String.format("SHINYPROXY_USERNAME=%s", userName));
+		
+		String[] groups = userService.getGroups(userService.getCurrentAuth());
+		env.add(String.format("SHINYPROXY_USERGROUPS=%s", Arrays.stream(groups).collect(Collectors.joining(","))));
 		
 		String envFile = app.getDockerEnvFile();
 		if (envFile != null && Files.isRegularFile(Paths.get(envFile))) {

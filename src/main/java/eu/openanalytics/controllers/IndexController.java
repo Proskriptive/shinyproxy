@@ -60,7 +60,7 @@ public class IndexController {
 		map.put("logo", environment.getProperty("shiny.proxy.logo-url"));
 		map.put("apps", apps.toArray());
 		map.put("displayAppLogos", displayAppLogos);
-		map.put("adminGroups", userService.getAdminRoles());
+		map.put("adminGroups", userService.getAdminGroups());
 		map.put("userName",userName);
         return "index";
     }
