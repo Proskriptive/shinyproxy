@@ -72,9 +72,6 @@
 	
 	 $(function () { 
          $body = $("body");
-         $('#shinyframe').load(function () {
-             $body.removeClass("loading");
-         });
 
          $('#shinyframe').ready(function () {
          $body.addClass("loading");
@@ -142,6 +139,9 @@ body.loading .progress-icon {
 			if (source == "") {
 				$.post(window.location.pathname, function(containerPath) {
 					$("#shinyframe").attr("src", containerPath);
+                    $('#shinyframe').load(function () {
+                        $body.removeClass("loading");
+                    });
 				}).fail(function(request) {
 					var newDoc = document.open("text/html", "replace");
 					newDoc.write(request.responseText);
