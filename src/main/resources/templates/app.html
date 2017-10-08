@@ -115,28 +115,40 @@ body.loading .progress-icon {
 </head>
 
 <body>
-	<span th:text="${heartbeatRate}" id="heartbeatRate" style="display:none"> </span> 
 	<!-- navigation bar -->
 	<div th:replace="../fragments/navbar :: navbar"></div>
 
 	<!-- content -->
 	<iframe id="shinyframe" th:src="${container}" width="100%"
 		style="height: 100vh;position: absolute;top: 0;padding-top: 50px;"></iframe>
-	<script type="text/javascript"> 
+	<script type="text/javascript" th:inline="javascript">
 		function setShinyframeHeight() {
 	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
 	    }
 	    window.addEventListener("load", setShinyframeHeight);
 	    window.addEventListener("resize",  setShinyframeHeight);
-		
+
 		function heartbeat() {
 		    setTimeout(function() {
-		        $.ajax("/heartbeat" + window.location.pathname).success(function(data) {
+		        $.ajax([[${heartbeatPath}]] + window.location.pathname).success(function(data) {
 		        	heartbeat();
 		        });
-		    }, $('#heartbeatRate').text());
+		    }, [[${heartbeatRate}]]);
 		};
-		heartbeat();			
+		heartbeat();
+
+        $(window).load(function() {
+			var source = $("#shinyframe").attr("src");
+			if (source == "") {
+				$.post(window.location.pathname, function(containerPath) {
+					$("#shinyframe").attr("src", containerPath);
+				}).fail(function(request) {
+					var newDoc = document.open("text/html", "replace");
+					newDoc.write(request.responseText);
+					newDoc.close();
+				});
+			}
+		});
 	</script>
 
 

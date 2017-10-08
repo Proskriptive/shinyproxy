@@ -57,7 +57,7 @@ public class AppController extends BaseController {
 		prepareMap(map, request);
 		
 		request.getSession().setMaxInactiveInterval(6*60);
-		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
+		String userName = getUserName(request);
 
 		String queryString = request.getQueryString();
 		if (queryString == null) queryString = "";

@@ -52,7 +52,7 @@ public class IndexController extends BaseController {
 		if(dockerService != null){
 			dockerService.shutdown();
 		}
-    	String userName = (principal == null) ? request.getSession().getId() : principal.getName();
+    	String userName = getUserName(request);
         session.setAttribute("userName", userName);
 
 		List<ShinyApp> apps = userService.getAccessibleApps(SecurityContextHolder.getContext().getAuthentication());
@@ -68,7 +68,7 @@ public class IndexController extends BaseController {
 		map.put("apps", apps.toArray());
 		map.put("displayAppLogos", displayAppLogos);
 		map.put("adminGroups", userService.getAdminGroups());
-		map.put("userName",userName);
+		map.put("userName", userName);
 		map.put("displayAppLogos", displayAppLogos);
 
 		return "index";

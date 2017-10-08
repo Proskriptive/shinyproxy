@@ -317,7 +317,7 @@ padding-bottom:1em;
 
 
 					<div th:each="app: ${apps}" class="userapps">
-						<form method="post" th:action="@{app/}+${app.name}">
+						<form method="get" th:action="@{app/}+${app.name}">
 							<button type="submit" class="btn btn-primary"
 								th:text="${app.displayName == null} ? ${app.name} : ${app.displayName}"></button>
 						</form>
