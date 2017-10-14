@@ -23,6 +23,9 @@ git reset --hard "$TRAVIS_COMMIT"
 
 ./buildshinyproxy.sh
 
+sudo docker build -t proskriptive.azurecr.io/proskriptivedev/shinyproxy
+sudo docker push proskriptive.azurecr.io/proskriptivedev/shinyproxy
+
 EOF
 
 rm "$keyfile"
