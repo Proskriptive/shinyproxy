@@ -117,14 +117,8 @@ body.loading .progress-icon {
 
 	<!-- content -->
 	<iframe id="shinyframe" th:src="${container}" width="100%"
-		style="height: 100vh;position: absolute;top: 0;padding-top: 50px;"></iframe>
+		style="height: 100%;position: absolute;top: 0;padding-top: 50px;"></iframe>
 	<script type="text/javascript" th:inline="javascript">
-		function setShinyframeHeight() {
-	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
-	    }
-	    window.addEventListener("load", setShinyframeHeight);
-	    window.addEventListener("resize",  setShinyframeHeight);
-
 		function heartbeat() {
 		    setTimeout(function() {
 		        $.ajax([[${heartbeatPath}]] + window.location.pathname).success(function(data) {
