@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -352,6 +353,19 @@ public class DockerService {
 			releasePort(proxy.port);
 			throw new ShinyProxyException("Failed to start container: " + e.getMessage(), e);
 		}
+
+		byte token[] = new byte[32];
+		try {
+			SecureRandom.getInstance("SHA1PRNG").nextBytes(token);
+		} catch (Exception e) {
+			throw new ShinyProxyException("Could not get SecureRandom instance");
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("_");
+		for (byte b : token) {
+			sb.append(String.format("%02X", b));
+		}
+		proxy.name += sb.toString();
 
 		if (!testProxy(proxy)) {
 			releaseProxy(proxy, true);
