@@ -20,7 +20,6 @@
  */
 package eu.openanalytics;
 
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -30,7 +29,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.PortInUseException;
-import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfoCustomizer;
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,15 +36,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import eu.openanalytics.services.DockerService;
-import eu.openanalytics.services.DockerService.MappingListener;
-import io.undertow.Handlers;
-import io.undertow.server.HandlerWrapper;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.handlers.PathHandler;
-import io.undertow.server.handlers.ResponseCodeHandler;
-import io.undertow.server.handlers.proxy.LoadBalancingProxyClient;
-import io.undertow.server.handlers.proxy.ProxyHandler;
-import io.undertow.servlet.api.DeploymentInfo;
 
 @SpringBootApplication
 @EnableAsync
@@ -84,33 +73,7 @@ public class ShinyProxyApplication {
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 		UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
-		factory.addDeploymentInfoCustomizers(new UndertowDeploymentInfoCustomizer() {
-			@Override
-			public void customize(DeploymentInfo deploymentInfo) {
-				deploymentInfo.addInitialHandlerChainWrapper(new RootHandlerWrapper());
-			}
-		});
 		factory.setPort(Integer.parseInt(environment.getProperty("shiny.proxy.port", "8080")));
 		return factory;	
-	}
-
-	private class RootHandlerWrapper implements HandlerWrapper {
-		public HttpHandler wrap(HttpHandler defaultHandler) {
-			PathHandler pathHandler = Handlers.path(defaultHandler);
-			dockerService.addMappingListener(new MappingListener() {
-				@Override
-				public void mappingAdded(String mapping, URI target) {
-					LoadBalancingProxyClient proxyClient = new LoadBalancingProxyClient();
-					proxyClient.addHost(target);
-					HttpHandler handler = new ProxyHandler(proxyClient, ResponseCodeHandler.HANDLE_404);
-					pathHandler.addPrefixPath(mapping, handler);
-				}
-				@Override
-				public void mappingRemoved(String mapping) {
-					pathHandler.removePrefixPath(mapping);
-				}
-			});
-			return pathHandler;
-		}
 	}
 }
