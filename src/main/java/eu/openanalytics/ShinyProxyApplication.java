@@ -15,7 +15,9 @@
  */
 package eu.openanalytics;
 
+import java.lang.reflect.Field;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -33,15 +35,16 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import eu.openanalytics.services.DockerService;
 import eu.openanalytics.services.DockerService.MappingListener;
-import io.undertow.Handlers;
 import io.undertow.server.HandlerWrapper;
 import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.ResponseCodeHandler;
 import io.undertow.server.handlers.proxy.ProxyClient;
 import io.undertow.server.handlers.proxy.ProxyHandler;
 import io.undertow.server.handlers.proxy.SimpleProxyClientProvider;
 import io.undertow.servlet.api.DeploymentInfo;
+import io.undertow.util.PathMatcher;
 
 /**
  * @author Torkild U. Resheim, Itema AS
@@ -59,7 +62,7 @@ public class ShinyProxyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(ShinyProxyApplication.class);
-		
+
 		boolean hasExternalConfig = Files.exists(Paths.get("application.yml"));
 		if (!hasExternalConfig) app.setAdditionalProfiles("demo");
 		
@@ -81,7 +84,30 @@ public class ShinyProxyApplication {
 
 	private class RootHandlerWrapper implements HandlerWrapper {
 		public HttpHandler wrap(HttpHandler defaultHandler) {
-			PathHandler pathHandler = Handlers.path(defaultHandler);
+			PathHandler pathHandler = new PathHandler(defaultHandler) {
+				@SuppressWarnings("unchecked")
+				@Override
+				public void handleRequest(HttpServerExchange exchange) throws Exception {
+					Field field = PathHandler.class.getDeclaredField("pathMatcher");
+					field.setAccessible(true);
+					PathMatcher<HttpHandler> pathMatcher = (PathMatcher<HttpHandler>) field.get(this);
+					PathMatcher.PathMatch<HttpHandler> match = pathMatcher.match(exchange.getRelativePath());
+
+					// Proxy URLs bypass the Spring security filters, so the session ID must be checked here instead.
+					boolean sessionMatch = true;
+					if (match.getValue() instanceof ProxyHandler) {
+						sessionMatch = dockerService.sessionOwnsProxy(exchange);
+					}
+
+					if (sessionMatch) {
+						super.handleRequest(exchange);
+					} else {
+						exchange.setStatusCode(401);
+						exchange.getResponseChannel().write(ByteBuffer.wrap("No session ID found".getBytes()));
+					}
+				}
+			};
+
 			dockerService.addMappingListener(new MappingListener() {
 				@Override
 				public void mappingAdded(String mapping, URI target) {
