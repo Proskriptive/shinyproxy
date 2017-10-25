@@ -1,0 +1,7 @@
+#!/bin/bash
+
+service shinyproxy stop
+if [ -d /run/systemd/system ];
+then
+  systemctl disable shinyproxy.service
+fi

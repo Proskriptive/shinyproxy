@@ -1,3 +1,25 @@
+<!--
+
+    ShinyProxy
+
+    Copyright (C) 2016-2017 Open Analytics
+
+    ===========================================================================
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the Apache License as published by
+    The Apache Software Foundation, either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Apache License for more details.
+
+    You should have received a copy of the Apache License
+    along with this program.  If not, see <http://www.apache.org/licenses/>
+
+-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
@@ -50,9 +72,6 @@
 	
 	 $(function () { 
          $body = $("body");
-         $('#shinyframe').load(function () {
-             $body.removeClass("loading");
-         });
 
          $('#shinyframe').ready(function () {
          $body.addClass("loading");
@@ -93,28 +112,43 @@ body.loading .progress-icon {
 </head>
 
 <body>
-	<span th:text="${heartbeatRate}" id="heartbeatRate" style="display:none"> </span> 
 	<!-- navigation bar -->
 	<div th:replace="../fragments/navbar :: navbar"></div>
 
 	<!-- content -->
 	<iframe id="shinyframe" th:src="${container}" width="100%"
 		style="height: 100vh;position: absolute;top: 0;padding-top: 50px;"></iframe>
-	<script type="text/javascript"> 
+	<script type="text/javascript" th:inline="javascript">
 		function setShinyframeHeight() {
 	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
 	    }
 	    window.addEventListener("load", setShinyframeHeight);
 	    window.addEventListener("resize",  setShinyframeHeight);
-		
+
 		function heartbeat() {
 		    setTimeout(function() {
-		        $.ajax("/heartbeat" + window.location.pathname).success(function(data) {
+		        $.ajax([[${heartbeatPath}]] + window.location.pathname).success(function(data) {
 		        	heartbeat();
 		        });
-		    }, $('#heartbeatRate').text());
+		    }, [[${heartbeatRate}]]);
 		};
-		heartbeat();			
+		heartbeat();
+
+        $(window).load(function() {
+			var source = $("#shinyframe").attr("src");
+			if (source == "") {
+				$.post(window.location.pathname, function(containerPath) {
+					$("#shinyframe").attr("src", containerPath);
+                    $('#shinyframe').load(function () {
+                        $body.removeClass("loading");
+                    });
+				}).fail(function(request) {
+					var newDoc = document.open("text/html", "replace");
+					newDoc.write(request.responseText);
+					newDoc.close();
+				});
+			}
+		});
 	</script>
 
 

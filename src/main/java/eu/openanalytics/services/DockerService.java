@@ -1,17 +1,22 @@
 /**
- * Copyright 2016 Open Analytics, Belgium
+ * ShinyProxy
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (C) 2016-2017 Open Analytics
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * ===========================================================================
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the Apache License as published by
+ * The Apache Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * Apache License for more details.
+ *
+ * You should have received a copy of the Apache License
+ * along with this program.  If not, see <http://www.apache.org/licenses/>
  */
 package eu.openanalytics.services;
 
@@ -23,19 +28,23 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.IntPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
@@ -47,31 +56,49 @@ import org.springframework.stereotype.Service;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerCertificates;
 import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.DockerClient.RemoveContainerParam;
+import com.spotify.docker.client.LogStream;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerInfo;
 import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.HostConfig.Builder;
 import com.spotify.docker.client.messages.PortBinding;
+import com.spotify.docker.client.messages.mount.Mount;
+import com.spotify.docker.client.messages.swarm.ContainerSpec;
+import com.spotify.docker.client.messages.swarm.DnsConfig;
+import com.spotify.docker.client.messages.swarm.EndpointSpec;
+import com.spotify.docker.client.messages.swarm.NetworkAttachmentConfig;
+import com.spotify.docker.client.messages.swarm.Node;
+import com.spotify.docker.client.messages.swarm.PortConfig;
+import com.spotify.docker.client.messages.swarm.ServiceSpec;
+import com.spotify.docker.client.messages.swarm.Task;
+import com.spotify.docker.client.messages.swarm.TaskSpec;
 
 import eu.openanalytics.ShinyProxyException;
 import eu.openanalytics.services.AppService.ShinyApp;
 import eu.openanalytics.services.EventService.EventType;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.server.handlers.Cookie;
+import io.undertow.servlet.handlers.ServletRequestContext;
 
 @Service
 public class DockerService {
 		
 	private Logger log = Logger.getLogger(DockerService.class);
 
+	private List<Proxy> launchingProxies = Collections.synchronizedList(new ArrayList<>());
 	private List<Proxy> activeProxies = Collections.synchronizedList(new ArrayList<>());
+	
 	private List<MappingListener> mappingListeners = Collections.synchronizedList(new ArrayList<>());
 	private Set<Integer> occupiedPorts = Collections.synchronizedSet(new HashSet<>());
 	
 	private ExecutorService containerKiller = Executors.newSingleThreadExecutor();
+	
+	private boolean swarmMode = false;
 	
 	@Inject
 	Environment environment;
@@ -80,73 +107,56 @@ public class DockerService {
 	AppService appService;
 	
 	@Inject
+	UserService userService;
+	
+	@Inject
 	EventService eventService;
+	
+	@Inject
+	LogService logService;
 	
 	@Inject
 	DockerClient dockerClient;
 
 	public static class Proxy {
+		
 		public String name;
+		public String protocol;
+		public String host;
 		public int port;
 		public String containerId;
+		public String serviceId;
 		public String userName;
 		public String appName;
+		public String sessionId;
 		public long startupTimestamp;
+		
+		public String uptime() {
+			long uptimeSec = (System.currentTimeMillis() - startupTimestamp)/1000;
+			return String.format("%d:%02d:%02d", uptimeSec/3600, (uptimeSec%3600)/60, uptimeSec%60);
+		}
+		
+		public Proxy copyInto(Proxy target) {
+			target.name = this.name;
+			target.protocol = this.protocol;
+			target.host = this.host;
+			target.port = this.port;
+			target.containerId = this.containerId;
+			target.serviceId = this.serviceId;
+			target.userName = this.userName;
+			target.appName = this.appName;
+			target.sessionId = this.sessionId;
+			target.startupTimestamp = this.startupTimestamp;
+			return target;
+		}
 	}
 	
-	@Bean
-	public DockerClient getDockerClient() {
+	@PostConstruct
+	public void init() {
 		try {
-			return DefaultDockerClient.builder()
-				.dockerCertificates(DockerCertificates.builder().dockerCertPath(Paths.get(environment.getProperty("shiny.proxy.docker.cert-path"))).build().orNull())
-				.uri(environment.getProperty("shiny.proxy.docker.url"))
-				.build();
-		} catch (DockerCertificateException e) {
-			throw new ShinyProxyException("Failed to initialize docker client", e);
-		}
-	}
-
-	public List<Container> getShinyContainers() {
-		List<Container> shinyContainers = new ArrayList<>();
-		try {
-			List<Container> exec = dockerClient.listContainers();
-			String imageName = environment.getProperty("shiny.proxy.docker.image-name");
-			for (Container container : exec) {
-				if (container.image().equals(imageName)) {
-					shinyContainers.add(container);
-				}
-			}
-		} catch (DockerException | InterruptedException e) {
-			log.error("Failed to list containers", e);
-		}
-		return shinyContainers;
-	}
-	
-	public String getContainerUptime(String containerId) {
-		Proxy activeProxy = null;
-		for (Proxy p: activeProxies) {
-			if (containerId.equals(p.containerId)) activeProxy = p;
-		}
-		if (activeProxy == null) return "n/a";
-		long uptimeSec = (System.currentTimeMillis() - activeProxy.startupTimestamp)/1000;
-		return String.format("%d:%02d:%02d", uptimeSec/3600, (uptimeSec%3600)/60, uptimeSec%60);
-	}
-	
-	public List<Proxy> listProxies() {
-		List<Proxy> proxies = new ArrayList<>();
-		synchronized (activeProxies) {
-			for (Proxy proxy: activeProxies) {
-				Proxy copy = new Proxy();
-				copy.name = proxy.name;
-				copy.port = proxy.port;
-				copy.containerId = proxy.containerId;
-				copy.userName = proxy.userName;
-				copy.appName = proxy.appName;
-				copy.startupTimestamp = proxy.startupTimestamp;
-				proxies.add(copy);
-			}
-		}
-		return proxies;
+			swarmMode = (dockerClient.inspectSwarm().id() != null);
+		} catch (DockerException | InterruptedException e) {}
+		log.info(String.format("Swarm mode is %s", (swarmMode ? "enabled" : "disabled")));
 	}
 	
 	@PreDestroy
@@ -159,13 +169,53 @@ public class DockerService {
 		for (Proxy proxy: proxiesToRelease) releaseProxy(proxy, false);
 	}
 
-	public String getMapping(String userName, String appName) {
+	@Bean
+	public DockerClient getDockerClient() {
+		try {
+			return DefaultDockerClient.builder()
+				.dockerCertificates(DockerCertificates.builder().dockerCertPath(Paths.get(environment.getProperty("shiny.proxy.docker.cert-path"))).build().orNull())
+				.uri(environment.getProperty("shiny.proxy.docker.url"))
+				.build();
+		} catch (DockerCertificateException e) {
+			throw new ShinyProxyException("Failed to initialize docker client", e);
+		}
+	}
+	
+	public List<Proxy> listProxies() {
+		synchronized (activeProxies) {
+			return activeProxies.stream().map(p -> p.copyInto(new Proxy())).collect(Collectors.toList());
+		}
+	}
+	
+	public String getMapping(String userName, String appName, boolean startNew) {
+		waitForLaunchingProxy(userName, appName);
 		Proxy proxy = findProxy(userName, appName);
-		if (proxy == null) {
+		if (proxy == null && startNew) {
 			// The user has no proxy yet.
 			proxy = startProxy(userName, appName);
 		}
 		return (proxy == null) ? null : proxy.name;
+	}
+	
+	public boolean sessionOwnsProxy(HttpServerExchange exchange) {
+		String sessionId = getCurrentSessionId(exchange);
+		if (sessionId == null) return false;
+		String proxyName = exchange.getRelativePath();
+		synchronized (activeProxies) {
+			for (Proxy p: activeProxies) {
+				if (p.sessionId.equals(sessionId) && proxyName.startsWith("/" + p.name)) {
+					return true;
+				}
+			}
+		}
+		synchronized (launchingProxies) {
+			for (Proxy p: launchingProxies) {
+				if (p.sessionId.equals(sessionId) && proxyName.startsWith("/" + p.name)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public void releaseProxies(String userName) {
@@ -187,27 +237,42 @@ public class DockerService {
 		}
 	}
 	
+	private String getCurrentSessionId(HttpServerExchange exchange) {
+		if (exchange == null && ServletRequestContext.current() != null) {
+			exchange = ServletRequestContext.current().getExchange();
+		}
+		if (exchange == null) return null;
+		Cookie sessionCookie = exchange.getRequestCookies().get("JSESSIONID");
+		if (sessionCookie == null) return null;
+		return sessionCookie.getValue();
+	}
+	
 	private void releaseProxy(Proxy proxy, boolean async) {
 		activeProxies.remove(proxy);
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				try {
+		
+		Runnable releaser = () -> {
+			try {
+				if (swarmMode) {
+					dockerClient.removeService(proxy.serviceId);
+				} else {
+					ShinyApp app = appService.getApp(proxy.appName);
+					if (app != null && app.getDockerNetworkConnections() != null) {
+						for (String networkConnection: app.getDockerNetworkConnections()) {
+							dockerClient.disconnectFromNetwork(proxy.containerId, networkConnection);
+						}
+					}
 					dockerClient.removeContainer(proxy.containerId, RemoveContainerParam.forceKill());
-					releasePort(proxy.port);
-					log.info(String.format("Proxy released [user: %s] [app: %s] [port: %d]", proxy.userName, proxy.appName, proxy.port));
-					eventService.post(EventType.AppStop.toString(), proxy.userName, proxy.appName);
-				} catch (Exception e){
-					log.error("Failed to remove container " + proxy.name, e);
 				}
-				
+				releasePort(proxy.port);
+				log.info(String.format("Proxy released [user: %s] [app: %s] [port: %d]", proxy.userName, proxy.appName, proxy.port));
+				eventService.post(EventType.AppStop.toString(), proxy.userName, proxy.appName);
+			} catch (Exception e){
+				log.error("Failed to release proxy " + proxy.name, e);
 			}
 		};
-		if (async) {
-			containerKiller.submit(r);
-		} else {
-			r.run();
-		}
+		if (async) containerKiller.submit(releaser);
+		else releaser.run();
+		
 		synchronized (mappingListeners) {
 			for (MappingListener listener: mappingListeners) {
 				listener.mappingRemoved(proxy.name);
@@ -221,60 +286,131 @@ public class DockerService {
 			throw new ShinyProxyException("Cannot start container: unknown application: " + appName);
 		}
 		
-		Proxy proxy = findProxy(userName, appName);
-		if (proxy != null) {
+		if (findProxy(userName, appName) != null) {
 			throw new ShinyProxyException("Cannot start container: user " + userName + " already has a running proxy");
 		}
 		
-		proxy = new Proxy();
+		Proxy proxy = new Proxy();
 		proxy.userName = userName;
 		proxy.appName = appName;
 		proxy.port = getFreePort();
+		proxy.sessionId = getCurrentSessionId(null);
+		launchingProxies.add(proxy);
 		
 		try {
-			final Map<String, List<PortBinding>> portBindings = new HashMap<String, List<PortBinding>>();
-			List<PortBinding> hostPorts = new ArrayList<PortBinding>();
-		    hostPorts.add(PortBinding.of("0.0.0.0", proxy.port));
-			portBindings.put("3838", hostPorts);
+			URL hostURL = new URL(environment.getProperty("shiny.proxy.docker.url"));
+			proxy.protocol = environment.getProperty("shiny.proxy.docker.container-protocol", hostURL.getProtocol());
 			
-			long memoryLimit = convertMemory(app.getDockerMemory());
-			
-			Builder hostConfigBuilder = HostConfig.builder();
-			if (memoryLimit > 0) hostConfigBuilder.memory(memoryLimit);
-			if (app.getDockerNetwork() != null) hostConfigBuilder.networkMode(app.getDockerNetwork());
-			final HostConfig hostConfig = hostConfigBuilder
-					.portBindings(portBindings)
-					.dns(app.getDockerDns())
-					.binds(getBindVolumes(app))
-					.build();
-			
-			final ContainerConfig containerConfig = ContainerConfig.builder()
-				    .hostConfig(hostConfig)
-				    .image(app.getDockerImage())
-				    .exposedPorts("3838")
-				    .cmd(app.getDockerCmd())
-				    .env(buildEnv(userName, app))
-				    .build();
-			
-			ContainerCreation container = dockerClient.createContainer(containerConfig);
-			dockerClient.startContainer(container.id());
+			if (swarmMode) {
+				Mount[] mounts = getBindVolumes(app).stream()
+						.map(b -> b.split(":"))
+						.map(fromTo -> Mount.builder().source(fromTo[0]).target(fromTo[1]).type("bind").build())
+						.toArray(i -> new Mount[i]);
 
-			ContainerInfo info = dockerClient.inspectContainer(container.id());
-			proxy.name = info.name().substring(1);
-			proxy.containerId = container.id();
+				ContainerSpec containerSpec = ContainerSpec.builder()
+						.image(app.getDockerImage())
+						.command(app.getDockerCmd())
+						.env(buildEnv(userName, app))
+						.dnsConfig(DnsConfig.builder().nameServers(app.getDockerDns()).build())
+						.mounts(mounts)
+						.build();
+				
+				NetworkAttachmentConfig[] networks = Arrays
+						.stream(Optional.ofNullable(app.getDockerNetworkConnections()).orElse(new String[0]))
+						.map(n -> NetworkAttachmentConfig.builder().target(n).build())
+						.toArray(i -> new NetworkAttachmentConfig[i]);
+				
+				proxy.name = proxy.appName + "_" + proxy.port;
+				proxy.serviceId = dockerClient.createService(ServiceSpec.builder()
+						.name(proxy.name)
+						.networks(networks)
+						.taskTemplate(TaskSpec.builder()
+								.containerSpec(containerSpec)
+								.build())
+						.endpointSpec(EndpointSpec.builder()
+								.ports(PortConfig.builder().publishedPort(proxy.port).targetPort(3838).build())
+								.build())
+						.build()).id();
+
+				boolean containerFound = retry(i -> {
+					try {
+						Task serviceTask = dockerClient
+							.listTasks(Task.Criteria.builder().serviceName(proxy.name).build())
+							.stream().findAny().orElseThrow(() -> new IllegalStateException("Swarm service has no tasks"));
+						proxy.containerId = serviceTask.status().containerStatus().containerId();
+						proxy.host = serviceTask.nodeId();
+					} catch (Exception e) {
+						throw new RuntimeException("Failed to inspect swarm service tasks");
+					}
+					return (proxy.containerId != null);
+				}, 10, 2000);
+				if (!containerFound) throw new IllegalStateException("Swarm container did not start in time");
+				
+				Node node = dockerClient.listNodes().stream()
+						.filter(n -> n.id().equals(proxy.host)).findAny()
+						.orElseThrow(() -> new IllegalStateException(String.format("Swarm node not found [id: %s]", proxy.host)));
+				proxy.host = node.description().hostname();
+				
+				log.info(String.format("Container running in swarm [service: %s] [node: %s]", proxy.name, proxy.host));
+			} else {
+				Builder hostConfigBuilder = HostConfig.builder();
+				
+				Optional.ofNullable(memoryToBytes(app.getDockerMemory())).ifPresent(l -> hostConfigBuilder.memory(l));
+				Optional.ofNullable(app.getDockerNetwork()).ifPresent(n -> hostConfigBuilder.networkMode(app.getDockerNetwork()));
+				
+				hostConfigBuilder
+						.portBindings(Collections.singletonMap("3838", Collections.singletonList(PortBinding.of("0.0.0.0", proxy.port))))
+						.dns(app.getDockerDns())
+						.binds(getBindVolumes(app));
+				
+				ContainerConfig containerConfig = ContainerConfig.builder()
+					    .hostConfig(hostConfigBuilder.build())
+					    .image(app.getDockerImage())
+					    .exposedPorts("3838")
+					    .cmd(app.getDockerCmd())
+					    .env(buildEnv(userName, app))
+					    .build();
+				
+				ContainerCreation container = dockerClient.createContainer(containerConfig);
+				if (app.getDockerNetworkConnections() != null) {
+					for (String networkConnection: app.getDockerNetworkConnections()) {
+						dockerClient.connectToNetwork(container.id(), networkConnection);
+					}
+				}
+				dockerClient.startContainer(container.id());
+				
+				ContainerInfo info = dockerClient.inspectContainer(container.id());
+				proxy.host = hostURL.getHost();
+				proxy.name = info.name().substring(1);
+				proxy.containerId = container.id();
+			}
+
 			proxy.startupTimestamp = System.currentTimeMillis();
 		} catch (Exception e) {
 			releasePort(proxy.port);
 			throw new ShinyProxyException("Failed to start container: " + e.getMessage(), e);
 		}
 
-		if (!testContainer(proxy)) {
+		byte token[] = new byte[32];
+		try {
+			SecureRandom.getInstance("SHA1PRNG").nextBytes(token);
+		} catch (Exception e) {
+			throw new ShinyProxyException("Could not get SecureRandom instance");
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("_");
+		for (byte b : token) {
+			sb.append(String.format("%02X", b));
+		}
+		proxy.name += sb.toString();
+
+		if (!testProxy(proxy)) {
 			releaseProxy(proxy, true);
 			throw new ShinyProxyException("Container did not respond in time");
 		}
 		
 		try {
-			URI target = new URI("http://" + environment.getProperty("shiny.proxy.docker.host") + ":" + proxy.port);
+			URI target = new URI(String.format("%s://%s:%d", proxy.protocol, proxy.host, proxy.port));
 			synchronized (mappingListeners) {
 				for (MappingListener listener: mappingListeners) {
 					listener.mappingAdded(proxy.name, target);
@@ -282,7 +418,19 @@ public class DockerService {
 			}
 		} catch (URISyntaxException ignore) {}
 		
+		if (logService.isContainerLoggingEnabled()) {
+			try {
+				LogStream logStream = dockerClient.logs(proxy.containerId, LogsParam.follow(), LogsParam.stdout(), LogsParam.stderr());
+				logService.attachLogWriter(proxy, logStream);
+			} catch (DockerException e) {
+				log.error("Failed to attach to container log " + proxy.containerId, e);
+			} catch (InterruptedException e) {
+				log.error("Interrupted while attaching to container log " + proxy.containerId, e);
+			}
+		}
+		
 		activeProxies.add(proxy);
+		launchingProxies.remove(proxy);
 		log.info(String.format("Proxy activated [user: %s] [app: %s] [port: %d]", userName, appName, proxy.port));
 		eventService.post(EventType.AppStart.toString(), userName, appName);
 		
@@ -298,15 +446,33 @@ public class DockerService {
 		return null;
 	}
 	
-	private boolean testContainer(Proxy proxy) {
-		// Default: 10 * 2sec = 20sec
+	private void waitForLaunchingProxy(String userName, String appName) {
 		int totalWaitMs = Integer.parseInt(environment.getProperty("shiny.proxy.container-wait-time", "20000"));
-		int maxTries = 10;
-		int waitMs = totalWaitMs / maxTries;
+		int waitMs = Math.min(2000, totalWaitMs);
+		int maxTries = totalWaitMs / waitMs;
+		
+		boolean mayProceed = retry(i -> {
+			synchronized (launchingProxies) {
+				for (Proxy proxy: launchingProxies) {
+					if (userName.equals(proxy.userName) && appName.equals(proxy.appName)) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}, maxTries, waitMs);
+		
+		if (!mayProceed) throw new ShinyProxyException("Cannot proceed: waiting for proxy to launch");
+	}
+	
+	private boolean testProxy(Proxy proxy) {
+		int totalWaitMs = Integer.parseInt(environment.getProperty("shiny.proxy.container-wait-time", "20000"));
+		int waitMs = Math.min(2000, totalWaitMs);
+		int maxTries = totalWaitMs / waitMs;
 		int timeoutMs = Integer.parseInt(environment.getProperty("shiny.proxy.container-wait-timeout", "5000"));
 		
-		String urlString = String.format("http://%s:%d", environment.getProperty("shiny.proxy.docker.host"), proxy.port);
-		for (int currentTry = 1; currentTry <= maxTries; currentTry++) {
+		return retry(i -> {
+			String urlString = String.format("%s://%s:%d", proxy.protocol, proxy.host, proxy.port);
 			try {
 				URL testURL = new URL(urlString);
 				HttpURLConnection connection = ((HttpURLConnection) testURL.openConnection());
@@ -314,16 +480,18 @@ public class DockerService {
 				int responseCode = connection.getResponseCode();
 				if (responseCode == 200) return true;
 			} catch (Exception e) {
-				if (currentTry > 1) log.warn(String.format("Container unresponsive, trying again (%d/%d): %s", currentTry, maxTries, urlString));
-				try { Thread.sleep(waitMs); } catch (InterruptedException ignore) {}
+				if (i > 1) log.warn(String.format("Container unresponsive, trying again (%d/%d): %s", i, maxTries, urlString));
 			}
-		}
-		return false;
+			return false;
+		}, maxTries, waitMs);
 	}
 
 	private List<String> buildEnv(String userName, ShinyApp app) throws IOException {
 		List<String> env = new ArrayList<>();
 		env.add(String.format("SHINYPROXY_USERNAME=%s", userName));
+		
+		String[] groups = userService.getGroups(userService.getCurrentAuth());
+		env.add(String.format("SHINYPROXY_USERGROUPS=%s", Arrays.stream(groups).collect(Collectors.joining(","))));
 		
 		String envFile = app.getDockerEnvFile();
 		if (envFile != null && Files.isRegularFile(Paths.get(envFile))) {
@@ -361,8 +529,20 @@ public class DockerService {
 		occupiedPorts.remove(port);
 	}
 
-	private long convertMemory(String memory) {
-		if (memory == null || memory.isEmpty()) return -1;
+	private boolean retry(IntPredicate job, int tries, int waitTime) {
+		boolean retVal = false;
+		for (int currentTry = 1; currentTry <= tries; currentTry++) {
+			if (job.test(currentTry)) {
+				retVal = true;
+				break;
+			}
+			try { Thread.sleep(waitTime); } catch (InterruptedException ignore) {}
+		}
+		return retVal;
+	}
+	
+	private Long memoryToBytes(String memory) {
+		if (memory == null || memory.isEmpty()) return null;
 		Matcher matcher = Pattern.compile("(\\d+)([bkmg]?)").matcher(memory.toLowerCase());
 		if (!matcher.matches()) throw new IllegalArgumentException("Invalid memory argument: " + memory);
 		long mem = Long.parseLong(matcher.group(1));
