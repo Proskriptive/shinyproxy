@@ -1,4 +1,7 @@
-git pull
-mvn clean install
-sudo -i cp -v  ~/.m2/repository/eu/openanalytics/shinyproxy/0.9.2/*.jar /opt/shinyproxy
-sudo systemctl restart shinyproxy
+#!/bin/sh
+set -e
+mvn clean package
+sudo cp -v target/shinyproxy*.jar /opt/shinyproxy/shinyproxy.jar
+sudo systemctl stop shinyproxy
+sudo systemctl restart docker
+sudo systemctl start shinyproxy

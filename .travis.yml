@@ -1,0 +1,14 @@
+language: java
+sudo: false
+cache:
+  directories:
+  - "$HOME/.cache"
+deploy:
+  - provider: script
+    script: ./deploy.sh proskriptivedev/shinyproxy $DEPLOY_DEV_HOST
+    on:
+      branch: develop
+  - provider: script
+    script: ./deploy.sh proskriptive/shinyproxy $DEPLOY_PROD_HOST -o ProxyCommand="ssh -o StrictHostKeyChecking=no -W %h:%p $DEPLOY_PROD_PROXY_HOST"
+    on:
+      branch: master
