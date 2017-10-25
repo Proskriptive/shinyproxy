@@ -7,4 +7,4 @@ deploy:
   provider: script
   script: ./deploy.sh DEPLOY_DEV_HOST
   on:
-    branch: master
+    branch: develop
