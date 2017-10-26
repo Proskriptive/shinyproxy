@@ -29,5 +29,3 @@ sudo docker build -t proskriptive.azurecr.io/"$TRAVIS_DOCKER_IMAGE" .
 sudo docker push proskriptive.azurecr.io/"$TRAVIS_DOCKER_IMAGE"
 
 EOF
-
-rm "$keyfile"
