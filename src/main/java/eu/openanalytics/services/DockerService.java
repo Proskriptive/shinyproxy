@@ -39,6 +39,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.IntPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
@@ -83,6 +85,15 @@ import com.spotify.docker.client.messages.swarm.TaskSpec;
 import eu.openanalytics.ShinyProxyException;
 import eu.openanalytics.services.AppService.ShinyApp;
 import eu.openanalytics.services.EventService.EventType;
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.Volume;
+import io.fabric8.kubernetes.api.model.VolumeBuilder;
+import io.fabric8.kubernetes.api.model.VolumeMount;
+import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.servlet.handlers.ServletRequestContext;
@@ -97,11 +108,12 @@ public class DockerService {
 	
 	private List<MappingListener> mappingListeners = Collections.synchronizedList(new ArrayList<>());
 	private Set<Integer> occupiedPorts = Collections.synchronizedSet(new HashSet<>());
-	
+
 	private ExecutorService containerKiller = Executors.newSingleThreadExecutor();
 	
 	private boolean swarmMode = false;
-	
+	private boolean kubernetes = false;
+
 	@Inject
 	Environment environment;
 	
@@ -120,6 +132,9 @@ public class DockerService {
 	@Inject
 	DockerClient dockerClient;
 
+	@Inject
+	KubernetesClient kubeClient;
+	
 	public static class Proxy {
 
 		public String name;
@@ -133,7 +148,8 @@ public class DockerService {
 		public Set<String> sessionIds = new HashSet<>();
 		public long startupTimestamp;
 		public Long lastHeartbeatTimestamp;
-		
+		public Pod kubePod;
+
 		public String uptime() {
 			long uptimeSec = (System.currentTimeMillis() - startupTimestamp)/1000;
 			return String.format("%d:%02d:%02d", uptimeSec/3600, (uptimeSec%3600)/60, uptimeSec%60);
@@ -156,6 +172,10 @@ public class DockerService {
 	
 	@PostConstruct
 	public void init() {
+		if (kubernetes) {
+			log.info("Kubernetes is enabled");
+			return;
+		}
 		try {
 			swarmMode = (dockerClient.inspectSwarm().id() != null);
 		} catch (DockerException | InterruptedException e) {}
@@ -177,8 +197,16 @@ public class DockerService {
 		for (Proxy proxy: proxiesToRelease) releaseProxy(proxy, false);
 	}
 
+	@Bean KubernetesClient getKubeClient() {
+		kubernetes = "true".equals(environment.getProperty("shiny.proxy.docker.kubernetes"));
+		if (!kubernetes) return null;
+		return new DefaultKubernetesClient();
+	}
+
 	@Bean
+	@DependsOn("getKubeClient") // for kubernetes boolean
 	public DockerClient getDockerClient() {
+		if (kubernetes) return null;
 		try {
 			return DefaultDockerClient.builder()
 				.dockerCertificates(DockerCertificates.builder().dockerCertPath(Paths.get(environment.getProperty("shiny.proxy.docker.cert-path", ""))).build().orNull())
@@ -194,7 +222,7 @@ public class DockerService {
 			return activeProxies.stream().map(p -> p.copyInto(new Proxy())).collect(Collectors.toList());
 		}
 	}
-	
+
 	public String getMapping(HttpServletRequest request, String userName, String appName, boolean startNew) {
 		waitForLaunchingProxy(userName, appName);
 		Proxy proxy = findProxy(userName, appName);
@@ -275,7 +303,9 @@ public class DockerService {
 		
 		Runnable releaser = () -> {
 			try {
-				if (swarmMode) {
+				if (kubernetes) {
+					kubeClient.pods().delete(proxy.kubePod);
+				} else if (swarmMode) {
 					dockerClient.removeService(proxy.serviceId);
 				} else {
 					ShinyApp app = appService.getApp(proxy.appName);
@@ -295,24 +325,24 @@ public class DockerService {
 		};
 		if (async) containerKiller.submit(releaser);
 		else releaser.run();
-		
+
 		synchronized (mappingListeners) {
 			for (MappingListener listener: mappingListeners) {
 				listener.mappingRemoved(proxy.name);
 			}
 		}
 	}
-	
+
 	private Proxy startProxy(String userName, String appName) {
 		ShinyApp app = appService.getApp(appName);
 		if (app == null) {
 			throw new ShinyProxyException("Cannot start container: unknown application: " + appName);
 		}
-		
+
 		if (findProxy(userName, appName) != null) {
 			throw new ShinyProxyException("Cannot start container: user " + userName + " already has a running proxy");
 		}
-		
+
 		Proxy proxy = new Proxy();
 		proxy.userName = userName;
 		proxy.appName = appName;
@@ -320,10 +350,66 @@ public class DockerService {
 		launchingProxies.add(proxy);
 		
 		try {
-			URL hostURL = new URL(environment.getProperty("shiny.proxy.docker.url"));
-			proxy.protocol = environment.getProperty("shiny.proxy.docker.container-protocol", hostURL.getProtocol());
-			
-			if (swarmMode) {
+			URL hostURL = null;
+			String defaultProtocol = "http";
+			if (!kubernetes) {
+				hostURL = new URL(environment.getProperty("shiny.proxy.docker.url"));
+				defaultProtocol = hostURL.getProtocol();
+			}
+			proxy.protocol = environment.getProperty("shiny.proxy.docker.container-protocol", defaultProtocol);
+
+			if (kubernetes) {
+				String[] dockerVolumeStrs = Optional.ofNullable(app.getDockerVolumes()).orElse(new String[] {});
+				Volume[] volumes = new Volume[dockerVolumeStrs.length];
+				VolumeMount[] volumeMounts = new VolumeMount[dockerVolumeStrs.length];
+				for (int i = 0; i < dockerVolumeStrs.length; i++) {
+					String[] dockerVolume = dockerVolumeStrs[i].split(":");
+					String hostSource = dockerVolume[0];
+					String containerDest = dockerVolume[1];
+					String name = "shinyproxy-volume-" + i;
+					volumes[i] = new VolumeBuilder()
+							.withNewHostPath(hostSource)
+							.withName(name)
+							.build();
+					volumeMounts[i] = new VolumeMountBuilder()
+							.withMountPath(containerDest)
+							.withName(name)
+							.build();
+				}
+
+				String[] dockerNetworkConnections = app.getDockerNetworkConnections();
+				if (dockerNetworkConnections != null && dockerNetworkConnections.length > 0) {
+					log.warn(String.format("Docker networks specified for app %s, but Kubernetes does not have that concept", app.getName()));
+				}
+
+				ContainerBuilder containerBuilder = new ContainerBuilder()
+						.withImage(app.getDockerImage())
+						.withName("shiny-container")
+						.withPorts(new ContainerPortBuilder()
+							.withContainerPort(app.getPort())
+							.withHostPort(proxy.port)
+							.build());
+
+				if (app.getDockerCmd() != null) {
+					containerBuilder.withCommand(app.getDockerCmd());
+				}
+
+				proxy.name = proxy.appName.toLowerCase().replaceAll("[^a-z0-9]", "-") + "-" + proxy.port;
+				Pod pod = kubeClient.pods().inNamespace(Optional.ofNullable(app.getKubernetesNamespace()).orElse("default")).createNew()
+						.withApiVersion("v1")
+						.withKind("Pod")
+						.withNewMetadata()
+							.withName(proxy.name)
+						.endMetadata()
+						.withNewSpec()
+							.withContainers(Collections.singletonList(containerBuilder.build()))
+							.withVolumes(Arrays.asList(volumes))
+						.endSpec()
+						.done();
+
+				proxy.kubePod = pod = kubeClient.resource(pod).waitUntilReady(20, TimeUnit.SECONDS);
+				proxy.host = pod.getStatus().getHostIP();
+			} else if (swarmMode) {
 				Mount[] mounts = getBindVolumes(app).stream()
 						.map(b -> b.split(":"))
 						.map(fromTo -> Mount.builder().source(fromTo[0]).target(fromTo[1]).type("bind").build())
@@ -431,8 +517,13 @@ public class DockerService {
 		
 		if (logService.isContainerLoggingEnabled()) {
 			try {
-				LogStream logStream = dockerClient.logs(proxy.containerId, LogsParam.follow(), LogsParam.stdout(), LogsParam.stderr());
-				logService.attachLogWriter(proxy, logStream);
+				if (kubernetes) {
+					// TODO
+				} else {
+					LogStream logStream;
+					logStream = dockerClient.logs(proxy.containerId, LogsParam.follow(), LogsParam.stdout(), LogsParam.stderr());
+					logService.attachLogWriter(proxy, logStream);
+				}
 			} catch (DockerException e) {
 				log.error("Failed to attach to container log " + proxy.containerId, e);
 			} catch (InterruptedException e) {
