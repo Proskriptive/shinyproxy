@@ -39,11 +39,13 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerCertificates;
@@ -95,7 +97,7 @@ public class DockerService {
 		public String containerId;
 		public String userName;
 		public String appName;
-		public String sessionId;
+		public Set<String> sessionIds = new HashSet<>();
 		public long startupTimestamp;
 	}
 	
@@ -164,13 +166,18 @@ public class DockerService {
 		for (Proxy proxy: proxiesToRelease) releaseProxy(proxy, false);
 	}
 
-	public String getMapping(String userName, String appName) {
+	public String getMapping(HttpServletRequest request, String userName, String appName) {
 		Proxy proxy = findProxy(userName, appName);
 		if (proxy == null) {
 			// The user has no proxy yet.
 			proxy = startProxy(userName, appName);
 		}
-		return (proxy == null) ? null : proxy.name;
+		if (proxy == null) {
+			return null;
+		} else {
+			proxy.sessionIds.add(getCurrentSessionId(request));
+			return proxy.name;
+		}
 	}
 	
 	public boolean sessionOwnsProxy(HttpServerExchange exchange) {
@@ -179,7 +186,7 @@ public class DockerService {
 		String proxyName = exchange.getRelativePath();
 		synchronized (activeProxies) {
 			for (Proxy p: activeProxies) {
-				if (p.sessionId.equals(sessionId) && proxyName.startsWith("/" + p.name)) {
+				if (p.sessionIds.contains(sessionId) && proxyName.startsWith("/" + p.name)) {
 					return true;
 				}
 			}
@@ -212,6 +219,15 @@ public class DockerService {
 		}
 		if (exchange == null) return null;
 		Cookie sessionCookie = exchange.getRequestCookies().get("JSESSIONID");
+		if (sessionCookie == null) return null;
+		return sessionCookie.getValue();
+	}
+
+	private String getCurrentSessionId(HttpServletRequest request) {
+		if (request == null) {
+			return getCurrentSessionId((HttpServerExchange) null);
+		}
+		javax.servlet.http.Cookie sessionCookie = WebUtils.getCookie(request, "JSESSIONID");
 		if (sessionCookie == null) return null;
 		return sessionCookie.getValue();
 	}
@@ -259,7 +275,6 @@ public class DockerService {
 		proxy.userName = userName;
 		proxy.appName = appName;
 		proxy.port = getFreePort();
-		proxy.sessionId = getCurrentSessionId(null);
 		
 		try {
 			final Map<String, List<PortBinding>> portBindings = new HashMap<String, List<PortBinding>>();

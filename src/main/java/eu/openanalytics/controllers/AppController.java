@@ -55,7 +55,7 @@ public class AppController {
 		String userName = (principal == null) ? request.getSession().getId() : principal.getName();
 		Matcher matcher = Pattern.compile(".*/app/(.*)").matcher(request.getRequestURI());
 		String appName = matcher.matches() ? matcher.group(1) : null;
-		String mapping = dockerService.getMapping(userName, appName);
+		String mapping = dockerService.getMapping(request, userName, appName);
 		
 		String queryString = request.getQueryString();
 		if (queryString == null) queryString = "";
