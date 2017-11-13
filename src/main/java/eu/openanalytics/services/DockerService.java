@@ -94,6 +94,7 @@ import io.fabric8.kubernetes.api.model.VolumeMount;
 import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.dsl.LogWatch;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.Cookie;
 import io.undertow.servlet.handlers.ServletRequestContext;
@@ -349,6 +350,8 @@ public class DockerService {
 		proxy.port = getFreePort();
 		launchingProxies.add(proxy);
 		
+		String kubeNamespace = Optional.ofNullable(app.getKubernetesNamespace()).orElse("default");
+
 		try {
 			URL hostURL = null;
 			String defaultProtocol = "http";
@@ -395,7 +398,7 @@ public class DockerService {
 				}
 
 				proxy.name = proxy.appName.toLowerCase().replaceAll("[^a-z0-9]", "-") + "-" + proxy.port;
-				Pod pod = kubeClient.pods().inNamespace(Optional.ofNullable(app.getKubernetesNamespace()).orElse("default")).createNew()
+				Pod pod = kubeClient.pods().inNamespace(kubeNamespace).createNew()
 						.withApiVersion("v1")
 						.withKind("Pod")
 						.withNewMetadata()
@@ -518,7 +521,8 @@ public class DockerService {
 		if (logService.isContainerLoggingEnabled()) {
 			try {
 				if (kubernetes) {
-					// TODO
+					LogWatch watcher = kubeClient.pods().inNamespace(kubeNamespace).withName(proxy.name).watchLog();
+					logService.attachLogWatcher(proxy, watcher);
 				} else {
 					LogStream logStream;
 					logStream = dockerClient.logs(proxy.containerId, LogsParam.follow(), LogsParam.stdout(), LogsParam.stderr());
