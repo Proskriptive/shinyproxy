@@ -92,6 +92,7 @@ import io.fabric8.kubernetes.api.model.Volume;
 import io.fabric8.kubernetes.api.model.VolumeBuilder;
 import io.fabric8.kubernetes.api.model.VolumeMount;
 import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
+import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
@@ -201,7 +202,12 @@ public class DockerService {
 	@Bean KubernetesClient getKubeClient() {
 		kubernetes = "true".equals(environment.getProperty("shiny.proxy.docker.kubernetes"));
 		if (!kubernetes) return null;
-		return new DefaultKubernetesClient();
+		ConfigBuilder configBuilder = new ConfigBuilder();
+		String masterUrl = environment.getProperty("shiny.proxy.docker.kubernetes-url");
+		if (masterUrl != null) {
+			configBuilder.withMasterUrl(masterUrl);
+		}
+		return new DefaultKubernetesClient(configBuilder.build());
 	}
 
 	@Bean
