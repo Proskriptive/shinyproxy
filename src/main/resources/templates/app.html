@@ -38,7 +38,7 @@
         $('#userDiv').click(function(){     
             //  $('.dropdown-toggle', this).trigger('click'); 
               document.getElementById("dropdownmenu").classList.toggle("show");
-            });        
+            });
         $(document).click(function (e) {
             
             e.stopPropagation();
@@ -114,7 +114,7 @@ body.loading .progress-icon {
 	<!-- content -->
 	<iframe id="shinyframe" th:src="${container}" width="100%"
 		style="height: 100vh;"></iframe>
-	<script type="text/javascript"> 
+	<script type="text/javascript" th:inline="javascript"> 
 		function setShinyframeHeight() {
 	        $('#shinyframe').css('height', ($(window).height()-50)+'px');
 	    }
