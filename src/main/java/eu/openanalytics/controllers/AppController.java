@@ -59,9 +59,6 @@ public class AppController extends BaseController {
 		request.getSession().setMaxInactiveInterval(6*60);
 		String userName = getUserName(request);
 
-		String queryString = request.getQueryString();
-		if (queryString == null) queryString = "";
-		else queryString = "?" + queryString;
 		String mapping = dockerService.getMapping(request, getUserName(request), getAppName(request), false);
 		String contextPath = ShinyProxyApplication.getContextPath(environment);
 

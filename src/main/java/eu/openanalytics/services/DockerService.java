@@ -122,7 +122,7 @@ public class DockerService {
 	DockerClient dockerClient;
 
 	public static class Proxy {
-		
+
 		public String name;
 		public String protocol;
 		public String host;
@@ -133,6 +133,7 @@ public class DockerService {
 		public String appName;
 		public Set<String> sessionIds = new HashSet<>();
 		public long startupTimestamp;
+		public Long lastHeartbeatTimestamp;
 		
 		public String uptime() {
 			long uptimeSec = (System.currentTimeMillis() - startupTimestamp)/1000;
@@ -160,7 +161,12 @@ public class DockerService {
 			swarmMode = (dockerClient.inspectSwarm().id() != null);
 		} catch (DockerException | InterruptedException e) {}
 		log.info(String.format("Swarm mode is %s", (swarmMode ? "enabled" : "disabled")));
+
+		Thread heartbeatThread = new Thread(new AppCleaner(), "HeartbeatThread");
+		heartbeatThread.setDaemon(true);
+		heartbeatThread.start();
 	}
+	
 	
 	@PreDestroy
 	public void shutdown() {
@@ -226,7 +232,7 @@ public class DockerService {
 		return false;
 	}
 	
-	public void releaseProxies(String userName) {
+	public List<Proxy> releaseProxies(String userName) {
 		List<Proxy> proxiesToRelease = new ArrayList<>();
 		synchronized (activeProxies) {
 			for (Proxy proxy: activeProxies) {
@@ -236,6 +242,7 @@ public class DockerService {
 		for (Proxy proxy: proxiesToRelease) {
 			releaseProxy(proxy, true);
 		}
+		return proxiesToRelease;
 	}
 	
 	public void releaseProxy(String userName, String appName) {
@@ -344,7 +351,7 @@ public class DockerService {
 								.containerSpec(containerSpec)
 								.build())
 						.endpointSpec(EndpointSpec.builder()
-								.ports(PortConfig.builder().publishedPort(proxy.port).targetPort(3838).build())
+								.ports(PortConfig.builder().publishedPort(proxy.port).targetPort(app.getPort()).build())
 								.build())
 						.build()).id();
 
@@ -375,14 +382,14 @@ public class DockerService {
 				Optional.ofNullable(app.getDockerNetwork()).ifPresent(n -> hostConfigBuilder.networkMode(app.getDockerNetwork()));
 				
 				hostConfigBuilder
-						.portBindings(Collections.singletonMap("3838", Collections.singletonList(PortBinding.of("0.0.0.0", proxy.port))))
+						.portBindings(Collections.singletonMap(app.getPort().toString(), Collections.singletonList(PortBinding.of("0.0.0.0", proxy.port))))
 						.dns(app.getDockerDns())
 						.binds(getBindVolumes(app));
 				
 				ContainerConfig containerConfig = ContainerConfig.builder()
 					    .hostConfig(hostConfigBuilder.build())
 					    .image(app.getDockerImage())
-					    .exposedPorts("3838")
+					    .exposedPorts(app.getPort().toString())
 					    .cmd(app.getDockerCmd())
 					    .env(buildEnv(userName, app))
 					    .build();
@@ -600,5 +607,46 @@ public class DockerService {
 	public static interface MappingListener {
 		public void mappingAdded(String mapping, URI target);
 		public void mappingRemoved(String mapping);
+	}
+
+	public void heartbeatReceived(String user, String app) {
+		Proxy proxy = findProxy(user, app);
+		if (proxy != null) {
+			proxy.lastHeartbeatTimestamp = System.currentTimeMillis();
+		}
+	}
+
+	private class AppCleaner implements Runnable {
+		@Override
+		public void run() {
+			long cleanupInterval = 2 * Long.parseLong(environment.getProperty("shiny.proxy.heartbeat-rate", "10000"));
+			long heartbeatTimeout = Long.parseLong(environment.getProperty("shiny.proxy.heartbeat-timeout", "60000"));
+			
+			while (true) {
+				try {
+					List<Proxy> proxiesToRemove = new ArrayList<>();
+					long currentTimestamp = System.currentTimeMillis();
+					synchronized (activeProxies) {
+						for (Proxy proxy: activeProxies) {
+							Long lastHeartbeat = proxy.lastHeartbeatTimestamp;
+							if (lastHeartbeat == null) lastHeartbeat = proxy.startupTimestamp;
+							long proxySilence = currentTimestamp - lastHeartbeat;
+							if (proxySilence > heartbeatTimeout) {
+								log.info(String.format("Releasing inactive proxy [user: %s] [app: %s] [silence: %dms]", proxy.userName, proxy.appName, proxySilence));
+								proxiesToRemove.add(proxy);
+							}
+						}
+					}
+					for (Proxy proxy: proxiesToRemove) {
+						releaseProxy(proxy, true);
+					}
+				} catch (Throwable t) {
+					log.error("Error in HeartbeatThread", t);
+				}
+				try {
+					Thread.sleep(cleanupInterval);
+				} catch (InterruptedException e) {}
+			}
+		}
 	}
 }
