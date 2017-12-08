@@ -455,7 +455,7 @@ public class DockerService {
 						.done();
 
 				// Must use millis because of this issue: https://github.com/fabric8io/kubernetes-client/issues/917
-				proxy.kubePod = pod = kubeClient.resource(pod).waitUntilReady(20000, TimeUnit.MILLISECONDS);
+				proxy.kubePod = pod = kubeClient.resource(pod).waitUntilReady(120 * 1000, TimeUnit.MILLISECONDS);
 				if (internalNetworking) {
 					proxy.host = pod.getStatus().getPodIP();
 				} else {
