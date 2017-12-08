@@ -90,6 +90,7 @@ import eu.openanalytics.services.AppService.ShinyApp;
 import eu.openanalytics.services.EventService.EventType;
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
+import io.fabric8.kubernetes.api.model.LocalObjectReference;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.Volume;
 import io.fabric8.kubernetes.api.model.VolumeBuilder;
@@ -430,6 +431,15 @@ public class DockerService {
 					containerBuilder.withCommand(app.getDockerCmd());
 				}
 
+				String[] imagePullSecrets = environment.getProperty("shiny.proxy.docker.kubernetes-image-pull-secrets", String[].class);
+				if (imagePullSecrets == null) {
+					String imagePullSecret = environment.getProperty("shiny.proxy.docker.kubernetes-image-pull-secret");
+					if (imagePullSecret != null) {
+						imagePullSecrets = new String[] {imagePullSecret};
+					} else {
+						imagePullSecrets = new String[0];
+					}
+				}
 				Pod pod = kubeClient.pods().inNamespace(kubeNamespace).createNew()
 						.withApiVersion("v1")
 						.withKind("Pod")
@@ -439,6 +449,8 @@ public class DockerService {
 						.withNewSpec()
 							.withContainers(Collections.singletonList(containerBuilder.build()))
 							.withVolumes(Arrays.asList(volumes))
+							.withImagePullSecrets(Arrays.asList(imagePullSecrets).stream()
+								.map(LocalObjectReference::new).collect(Collectors.toList()))
 						.endSpec()
 						.done();
 
