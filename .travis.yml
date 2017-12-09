@@ -5,7 +5,7 @@ cache:
   - "$HOME/.cache"
 deploy:
   - provider: script
-    script: ./deploy.sh proskriptivedev/shinyproxy $DEPLOY_DEV_HOST
+    script: ./deploy.sh proskriptive/shinyproxy:dev $DEPLOY_DEV_HOST
     on:
       branch: develop
   - provider: script
