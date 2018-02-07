@@ -435,7 +435,8 @@ public class DockerService {
 						.withImage(app.getDockerImage())
 						.withName("shiny-container")
 						.withPorts(containerPortBuilder.build())
-						.withEnv(envVars);
+						.withEnv(envVars)
+						.withVolumeMounts(volumeMounts);
 
 				String imagePullPolicy = environment.getProperty("shiny.proxy.docker.kubernetes-image-pull-policy", app.getKubernetesImagePullPolicy());
 				if (imagePullPolicy != null) {
